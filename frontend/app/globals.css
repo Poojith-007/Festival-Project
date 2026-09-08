@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+@theme {
+  --color-saffron: #ea580c; /* Saffron/Orange */
+  --color-gold: #ca8a04; /* Golden Yellow */
+  --color-ivory: #fefce8; /* Warm Cream/Ivory */
+  --color-brown: #451a03; /* Deep Brown */
+  
+  --font-sans: var(--font-inter), sans-serif;
+  --font-telugu: var(--font-noto-telugu), sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-ivory text-brown font-sans antialiased;
+  }
+}
