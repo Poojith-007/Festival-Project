@@ -1,59 +1,58 @@
 'use client';
-import { motion } from 'framer-motion';
 import { announcements } from '../../data/announcements';
-import { Bell, AlertTriangle, Info } from 'lucide-react';
+import { Bell } from 'lucide-react';
+import { useState } from 'react';
 
 export default function UpdatesPage() {
+  const [subscribed, setSubscribed] = useState(false);
+
   return (
-    <div className="py-12 px-4 bg-ivory min-h-screen">
-      <div className="max-w-3xl mx-auto">
-        <h1 className="text-4xl md:text-5xl font-bold text-brown mb-4 drop-shadow-sm text-center">Live Updates</h1>
-        <p className="text-brown/70 mb-12 text-center max-w-xl mx-auto text-lg">Latest announcements and information from the organizing committee.</p>
+    <div className="bg-[#FFF9F0] min-h-screen pb-24 md:pb-12 pt-8">
+      <div className="max-w-2xl mx-auto px-4">
+        <h1 className="text-3xl font-bold text-[#2D1B11] mb-6 font-telugu">Live Updates</h1>
         
-        <div className="space-y-6">
+        <div className="mb-8">
+          <button 
+            onClick={() => setSubscribed(!subscribed)}
+            className={`w-full py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors ${
+              subscribed ? 'bg-green-100 text-green-700 border border-green-300' : 'bg-[#F05A0A] text-white hover:bg-[#D04A08]'
+            }`}
+          >
+            <Bell size={20} />
+            {subscribed ? 'Subscribed to Push Notifications' : 'Subscribe to Push Notifications'}
+          </button>
+        </div>
+
+        <div className="space-y-4">
           {announcements.map((update, index) => {
-            const isImportant = update.type === 'important' || update.type === 'emergency';
-            
+            const isLive = update.type === 'emergency' && index === 0;
+            const isChange = update.message.includes('Important');
+
             return (
-              <motion.div 
+              <div 
                 key={update.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className={`p-6 md:p-8 rounded-3xl border transition-all hover:shadow-lg ${
-                  isImportant 
-                    ? 'bg-gradient-to-r from-red-50 to-white border-red-200 shadow-sm relative overflow-hidden' 
-                    : 'bg-white border-black/5 shadow-sm'
+                className={`p-4 rounded-xl border ${
+                  isLive 
+                    ? 'bg-red-50 border-red-200' 
+                    : 'bg-white border-[#E8B973]/30'
                 }`}
               >
-                {isImportant && <div className="absolute top-0 left-0 w-1.5 h-full bg-red-500"></div>}
-                <div className="flex flex-col sm:flex-row items-start gap-5">
-                  <div className={`p-4 rounded-2xl ${isImportant ? 'bg-red-100 text-red-600' : 'bg-saffron/10 text-saffron'}`}>
-                    {isImportant ? <AlertTriangle size={28} /> : <Info size={28} />}
-                  </div>
-                  <div className="flex-1 w-full">
-                    <div className="flex justify-between items-start mb-3 border-b border-black/5 pb-3">
-                      <span className={`text-xs font-bold uppercase tracking-widest ${isImportant ? 'text-red-600' : 'text-saffron'}`}>
-                        {isImportant ? 'Important Notice' : 'Update'}
-                      </span>
-                      <span className="text-sm font-medium text-brown/40 whitespace-nowrap bg-brown/5 px-3 py-1 rounded-full">{update.timestamp}</span>
-                    </div>
-                    <p className="text-brown text-lg font-medium leading-relaxed">{update.message}</p>
-                  </div>
+                <div className="flex justify-between items-start mb-2">
+                  <span className={`text-xs font-bold uppercase tracking-wider flex items-center gap-1 ${
+                    isLive ? 'text-red-600' : isChange ? 'text-[#F05A0A]' : 'text-[#2D1B11]/60'
+                  }`}>
+                    {isLive && '🔴 LIVE UPDATE'}
+                    {isChange && !isLive && '📢 Program Change'}
+                    {!isLive && !isChange && 'Update'}
+                  </span>
+                  <span className="text-xs text-[#2D1B11]/50">{update.timestamp}</span>
                 </div>
-              </motion.div>
+                <p className={`text-[15px] leading-relaxed ${isLive ? 'font-bold text-[#2D1B11]' : 'text-[#2D1B11]/80'}`}>
+                  {update.message}
+                </p>
+              </div>
             )
           })}
-          
-          {announcements.length === 0 && (
-            <div className="text-center p-16 bg-white rounded-3xl border-2 border-dashed border-brown/10 shadow-sm">
-              <div className="w-20 h-20 bg-brown/5 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Bell className="text-brown/30" size={40} />
-              </div>
-              <h3 className="text-xl font-bold text-brown mb-2">No new updates</h3>
-              <p className="text-brown/60 text-lg">Check back later for announcements.</p>
-            </div>
-          )}
         </div>
       </div>
     </div>

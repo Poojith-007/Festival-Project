@@ -9,7 +9,7 @@ export const festivalDays: FestivalDay[] = [
     shortDescription: 'The grand welcoming of Lord Ganesha.',
     status: 'completed',
     mainEvent: 'Pranapratishta',
-    image: '/images/festival/ganesh_idol_1788872848419.jpg',
+    image: '/images/festival/ganesh-idol.jpg',
     events: [
       { id: 'e1', time: '06:00 AM', name: 'Suprabhatam' },
       { id: 'e2', time: '09:00 AM', name: 'Murthi Sthapana' }
@@ -45,16 +45,17 @@ export const festivalDays: FestivalDay[] = [
     id: 'day-4',
     dayNumber: 4,
     date: '17 Sep 2026',
-    title: 'Evening Celebration',
+    title: 'Sri Ganapathi Puja',
     shortDescription: 'Special aarti and cultural programs.',
     status: 'current',
     mainEvent: 'Cultural Night',
     events: [
-      { id: 'e7', time: '06:00 AM', name: 'Suprabhatam' },
-      { id: 'e8', time: '07:00 AM', name: 'Ganesh Puja' },
-      { id: 'e9', time: '06:00 PM', name: 'Bhajans' },
-      { id: 'e10', time: '08:00 PM', name: 'Maha Aarti' },
-      { id: 'e11', time: '09:00 PM', name: 'Prasadam' }
+      { id: 'e7', time: '06:00 AM', name: 'Suprabhatam', icon: '🌅' },
+      { id: 'e8', time: '07:00 AM', name: 'Ganesh Puja', icon: '🪔' },
+      { id: 'e8b', time: '10:00 AM', name: 'Darshan', icon: '🙏' },
+      { id: 'e9', time: '06:00 PM', name: 'Bhajans', icon: '🎵' },
+      { id: 'e10', time: '08:00 PM', name: 'Maha Aarti', icon: '🕉️' },
+      { id: 'e11', time: '09:00 PM', name: 'Prasadam', icon: '🍛' }
     ]
   },
   {
@@ -73,27 +74,51 @@ export const festivalDays: FestivalDay[] = [
     id: 'day-6',
     dayNumber: 6,
     date: '19 Sep 2026',
-    title: 'Preparation for Farewell',
-    shortDescription: 'Final day of normal viewing.',
+    title: 'Cultural Night',
+    shortDescription: 'Local performances and drama.',
     status: 'upcoming',
-    mainEvent: 'Sandhya Aarti',
+    mainEvent: 'Cultural Events',
     events: [
-      { id: 'e13', time: '07:00 PM', name: 'Special Sandhya Aarti' }
+      { id: 'e13', time: '07:00 PM', name: 'Drama Performance' }
     ]
   },
   {
     id: 'day-7',
     dayNumber: 7,
     date: '20 Sep 2026',
+    title: 'Homam',
+    shortDescription: 'Special fire rituals.',
+    status: 'upcoming',
+    mainEvent: 'Maha Homam',
+    events: [
+      { id: 'e14', time: '09:00 AM', name: 'Chandi Homam' }
+    ]
+  },
+  {
+    id: 'day-8',
+    dayNumber: 8,
+    date: '21 Sep 2026',
+    title: 'Preparation for Farewell',
+    shortDescription: 'Final day of normal viewing.',
+    status: 'upcoming',
+    mainEvent: 'Sandhya Aarti',
+    events: [
+      { id: 'e15', time: '07:00 PM', name: 'Special Sandhya Aarti' }
+    ]
+  },
+  {
+    id: 'day-9',
+    dayNumber: 9,
+    date: '22 Sep 2026',
     title: 'Maha Nimajjanam',
     shortDescription: 'The Grand Final Day immersion.',
     status: 'upcoming',
     mainEvent: 'Procession & Immersion',
-    image: '/images/festival/nimajjanam_background_1788872905368.jpg',
+    image: '/images/festival/nimajjanam-background.jpg',
     events: [
-      { id: 'e14', time: '08:00 AM', name: 'Final Puja' },
-      { id: 'e15', time: '10:00 AM', name: 'Procession Starts' },
-      { id: 'e16', time: '04:00 PM', name: 'Nimajjanam' }
+      { id: 'e16', time: '08:00 AM', name: 'Final Puja' },
+      { id: 'e17', time: '10:00 AM', name: 'Procession Starts' },
+      { id: 'e18', time: '04:00 PM', name: 'Nimajjanam' }
     ]
   }
 ];

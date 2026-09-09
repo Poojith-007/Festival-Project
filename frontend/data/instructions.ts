@@ -8,3 +8,5 @@ export const festivalInstructions: Instruction[] = [
   { id: 'i5', text: 'Follow the designated procession route during Nimajjanam.' },
   { id: 'i6', text: 'Respect the festival surroundings and other devotees.' }
 ];
+
+export const instructions: Instruction[] = festivalInstructions;
