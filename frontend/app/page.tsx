@@ -1,35 +1,46 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
+import Image from 'next/image';
 import { festivalConfig } from '../data/festival';
 import { festivalDays } from '../data/days';
-import { announcements } from '../data/announcements';
 import { galleryItems } from '../data/gallery';
 import { committeeMembers } from '../data/committee';
 import { instructions } from '../data/instructions';
 import { 
   ArrowRight, 
   Bell, 
-  Clock, 
-  Calendar, 
   MapPin, 
-  Info, 
   Play, 
   X, 
   ChevronLeft, 
   ChevronRight, 
-  Image as ImageIcon,
   CheckCircle,
   Phone,
   Mail,
-  ShieldAlert,
   Navigation
 } from 'lucide-react';
 
 export default function Home() {
-  // 1. Day Selection State (default to Day 4 as per PPT)
-  const [selectedDayId, setSelectedDayId] = useState<string>('day-4');
-  const selectedDay = festivalDays.find(d => d.id === selectedDayId) || festivalDays[3];
+  const pathname = usePathname();
+  const showSection = (section: string) => {
+    if (pathname === '/') {
+      return ['home', 'about', 'organizers', 'location', 'instructions', 'contact'].includes(section);
+    }
+
+    if (pathname === '/days') return section === 'days' || section === 'day-details';
+    if (pathname === '/updates') return section === 'updates';
+    if (pathname === '/gallery') return section === 'gallery';
+    if (pathname === '/nimajjanam') return section === 'nimajjanam';
+
+    return false;
+  };
+
+  // 1. Day Selection State (defaults to the day flagged as current in the schedule)
+  const currentDay = festivalDays.find((day) => day.status === 'current') ?? festivalDays[0];
+  const [selectedDayId, setSelectedDayId] = useState<string>(currentDay.id);
+  const selectedDay = festivalDays.find((day) => day.id === selectedDayId) ?? currentDay;
 
   // 2. Push Notification Subscription State
   const [isSubscribed, setIsSubscribed] = useState<boolean>(false);
@@ -91,7 +102,7 @@ export default function Home() {
       {/* ========================================================= */}
       {/* 1. HERO SECTION (#home) - PPT Slide 3 Split Layout        */}
       {/* ========================================================= */}
-      <section id="home" className="pt-8 pb-16 px-4 md:px-8 max-w-6xl mx-auto w-full">
+      {showSection('home') && <section id="home" className="pt-8 pb-16 px-4 md:px-8 max-w-6xl mx-auto w-full">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
           
           {/* Left Column: 3 Compact Outlined Cards */}
@@ -118,13 +129,13 @@ export default function Home() {
               <div className="flex items-center gap-2 mb-3">
                 <span className="inline-block w-3 h-3 rounded-full bg-green-500 animate-pulse"></span>
                 <span className="font-bold text-sm sm:text-base text-[#2D1B11] tracking-wide">
-                  FESTIVAL IS LIVE - DAY 4 / 9
+                  FESTIVAL IS LIVE - DAY {currentDay.dayNumber} / {festivalDays.length}
                 </span>
               </div>
               <div className="w-full bg-[#FFF9F0] rounded-full h-3 overflow-hidden border border-[#E8B973]/30">
                 <div 
                   className="bg-[#F05A0A] h-3 rounded-full transition-all duration-700" 
-                  style={{ width: `${(4 / 9) * 100}%` }}
+                  style={{ width: `${(currentDay.dayNumber / festivalDays.length) * 100}%` }}
                 ></div>
               </div>
             </div>
@@ -132,28 +143,22 @@ export default function Home() {
             {/* Card 3: Today's Quick Schedule */}
             <div className="bg-white rounded-2xl p-6 sm:p-7 border border-[#E8B973]/40 shadow-xs">
               <span className="text-xs font-bold text-[#F05A0A] uppercase tracking-wider block mb-4 font-sans">
-                Today's Quick Schedule
+                Today&apos;s Quick Schedule
               </span>
               <div className="space-y-3 mb-6">
-                <div className="flex items-center gap-4 text-sm sm:text-base">
-                  <span className="w-20 font-bold text-[#F05A0A] shrink-0">6:00 AM</span>
-                  <span className="font-medium text-[#2D1B11]">Ganesh Puja</span>
-                </div>
-                <div className="flex items-center gap-4 text-sm sm:text-base">
-                  <span className="w-20 font-bold text-[#F05A0A] shrink-0">7:00 PM</span>
-                  <span className="font-medium text-[#2D1B11]">Bhajans</span>
-                </div>
-                <div className="flex items-center gap-4 text-sm sm:text-base">
-                  <span className="w-20 font-bold text-[#F05A0A] shrink-0">8:00 PM</span>
-                  <span className="font-medium text-[#2D1B11]">Maha Aarti</span>
-                </div>
+                {currentDay.events.slice(0, 3).map((event) => (
+                  <div key={event.id} className="flex items-center gap-4 text-sm sm:text-base">
+                    <span className="w-20 font-bold text-[#F05A0A] shrink-0">{event.time}</span>
+                    <span className="font-medium text-[#2D1B11]">{event.name}</span>
+                  </div>
+                ))}
               </div>
 
               <button
-                onClick={() => handleSelectDay('day-4')}
+                onClick={() => handleSelectDay(currentDay.id)}
                 className="w-full bg-[#F05A0A] hover:bg-[#D04A08] text-white font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 transition-all shadow-xs cursor-pointer active:scale-98 text-sm sm:text-base"
               >
-                <span>View Today's Schedule</span>
+                <span>View Today&apos;s Schedule</span>
                 <ArrowRight size={18} />
               </button>
             </div>
@@ -165,19 +170,19 @@ export default function Home() {
             <div className="relative w-full h-[400px] sm:h-[500px] lg:h-full min-h-[420px] rounded-3xl overflow-hidden border-2 border-[#E8B973]/60 bg-[#E8B973]/10 shadow-sm flex items-center justify-center">
               <div 
                 className="absolute inset-0 bg-cover bg-center transition-transform duration-700 hover:scale-103"
-                style={{ backgroundImage: `url('/images/festival/ganesh-idol.jpg')` }}
+                style={{ backgroundImage: `url('/images/festival/home-ganesh-idol.jpeg')` }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#2D1B11]/40 via-transparent to-transparent pointer-events-none"></div>
             </div>
           </div>
 
         </div>
-      </section>
+      </section>}
 
       {/* ========================================================= */}
-      {/* 2. 9-DAY JOURNEY SECTION (#days) - PPT Slide 4            */}
+      {/* 2. 7-DAY JOURNEY SECTION (#days) - PPT Slide 4            */}
       {/* ========================================================= */}
-      <section id="days" className="py-16 px-4 md:px-8 max-w-6xl mx-auto w-full border-t border-[#E8B973]/30">
+      {showSection('days') && <section id="days" className="py-16 px-4 md:px-8 max-w-6xl mx-auto w-full border-t border-[#E8B973]/30">
         <div className="text-center mb-12">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#F05A0A] font-telugu mb-3">
             The 7-Day Journey (List View)
@@ -217,18 +222,18 @@ export default function Home() {
               <span className="font-bold text-base text-[#F05A0A]">Day 4 (Today)</span>
             </div>
 
-            {/* Stage 3: Days 5-8 */}
+            {/* Stage 3: Days 5-6 */}
             <div className="relative z-10 flex flex-col items-center text-center w-36">
               <div className="w-9 h-9 rounded-full bg-white border-4 border-[#E8B973] flex items-center justify-center mb-3 shadow-xs">
                 <span className="w-2.5 h-2.5 rounded-full bg-[#E8B973]"></span>
               </div>
-              <span className="font-bold text-sm text-[#F05A0A]">Day 5–8</span>
+              <span className="font-bold text-sm text-[#F05A0A]">Day 5–6</span>
               <span className="text-xs text-[#2D1B11]/60 mt-1 leading-tight">
                 Upcoming events. Normal opacity.
               </span>
             </div>
 
-            {/* Stage 4: Day 9 Maha Nimajjanam */}
+            {/* Stage 4: Day 7 Maha Nimajjanam */}
             <div className="relative z-10 flex flex-col items-center text-center w-44">
               <span className="text-xs font-bold text-red-600 bg-red-50 border border-red-200 px-2.5 py-1 rounded-full mb-3 flex items-center gap-1 shadow-2xs">
                 <span className="w-2 h-2 rounded-full bg-red-500"></span>
@@ -237,7 +242,7 @@ export default function Home() {
               <div className="w-9 h-9 rounded-full bg-white border-4 border-red-500 flex items-center justify-center mb-2 shadow-xs">
                 <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span>
               </div>
-              <span className="font-bold text-sm text-red-600">Day 9</span>
+              <span className="font-bold text-sm text-red-600">Day 7</span>
             </div>
 
           </div>
@@ -248,7 +253,7 @@ export default function Home() {
           {festivalDays.map((day) => {
             const isSelected = selectedDayId === day.id;
             const isCurrent = day.status === 'current';
-            const isFinal = day.dayNumber === 9;
+            const isFinal = day.dayNumber === festivalDays.length;
 
             return (
               <button
@@ -271,12 +276,12 @@ export default function Home() {
             );
           })}
         </div>
-      </section>
+      </section>}
 
       {/* ========================================================= */}
       {/* 3. DAY DETAILS SECTION (#day-details) - PPT Slide 5        */}
       {/* ========================================================= */}
-      <section id="day-details" className="py-16 px-4 md:px-8 max-w-6xl mx-auto w-full border-t border-[#E8B973]/30">
+      {showSection('day-details') && <section id="day-details" className="py-16 px-4 md:px-8 max-w-6xl mx-auto w-full border-t border-[#E8B973]/30">
         <div className="text-center mb-10">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#F05A0A] font-telugu mb-2">
             Specific Day Details ({selectedDay.title})
@@ -372,12 +377,12 @@ export default function Home() {
           </div>
 
         </div>
-      </section>
+      </section>}
 
       {/* ========================================================= */}
       {/* 4. LIVE UPDATES & NOTIFICATIONS (#updates) - PPT Slide 6  */}
       {/* ========================================================= */}
-      <section id="updates" className="py-16 px-4 md:px-8 max-w-6xl mx-auto w-full border-t border-[#E8B973]/30">
+      {showSection('updates') && <section id="updates" className="py-16 px-4 md:px-8 max-w-6xl mx-auto w-full border-t border-[#E8B973]/30">
         <div className="text-center mb-10">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#F05A0A] font-telugu mb-2">
             Live Updates & Notifications
@@ -402,7 +407,7 @@ export default function Home() {
                 <span className="text-xs text-[#2D1B11]/50 font-medium">10 minutes ago</span>
               </div>
               <p className="font-bold text-base sm:text-lg text-[#2D1B11]">
-                Today's Maha Aarti will begin at 7:30 PM.
+                 Today&apos;s Maha Aarti will begin at 7:30 PM.
               </p>
             </div>
 
@@ -415,7 +420,7 @@ export default function Home() {
                 <span className="text-xs text-[#2D1B11]/50 font-medium">2 hours ago</span>
               </div>
               <p className="font-semibold text-sm sm:text-base text-[#2D1B11]/85 leading-relaxed">
-                Important: Today's cultural program has been rescheduled to 8:00 PM.
+                 Important: Today&apos;s cultural program has been rescheduled to 8:00 PM.
               </p>
             </div>
 
@@ -448,12 +453,12 @@ export default function Home() {
           </div>
 
         </div>
-      </section>
+      </section>}
 
       {/* ========================================================= */}
       {/* 5. IMMERSIVE GALLERY & VIDEOS (#gallery) - PPT Slide 7    */}
       {/* ========================================================= */}
-      <section id="gallery" className="py-16 px-4 md:px-8 max-w-6xl mx-auto w-full border-t border-[#E8B973]/30">
+      {showSection('gallery') && <section id="gallery" className="py-16 px-4 md:px-8 max-w-6xl mx-auto w-full border-t border-[#E8B973]/30">
         <div className="text-center mb-8">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#F05A0A] font-telugu mb-2">
             Immersive Gallery & Videos
@@ -543,12 +548,12 @@ export default function Home() {
           </div>
 
         </div>
-      </section>
+      </section>}
 
       {/* ========================================================= */}
       {/* 6. MAHA NIMAJJANAM (#nimajjanam) - PPT Slide 8            */}
       {/* ========================================================= */}
-      <section id="nimajjanam" className="py-16 px-4 md:px-8 max-w-6xl mx-auto w-full border-t border-[#E8B973]/30">
+      {showSection('nimajjanam') && <section id="nimajjanam" className="py-16 px-4 md:px-8 max-w-6xl mx-auto w-full border-t border-[#E8B973]/30">
         <div className="text-center mb-10">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#0c4a6e] font-telugu mb-2">
             Maha Nimajjanam (Overrides Home on Day 7)
@@ -616,12 +621,12 @@ export default function Home() {
           </div>
 
         </div>
-      </section>
+      </section>}
 
       {/* ========================================================= */}
       {/* 7. ABOUT FESTIVAL (#about)                                */}
       {/* ========================================================= */}
-      <section id="about" className="py-16 px-4 md:px-8 max-w-6xl mx-auto w-full border-t border-[#E8B973]/30">
+      {showSection('about') && <section id="about" className="py-16 px-4 md:px-8 max-w-6xl mx-auto w-full border-t border-[#E8B973]/30">
         <div className="bg-white rounded-3xl p-6 sm:p-10 border border-[#E8B973]/40 shadow-xs">
           <span className="text-xs font-bold text-[#F05A0A] uppercase tracking-wider block mb-2">
             Tradition & Devotion
@@ -638,12 +643,12 @@ export default function Home() {
             </p>
           </div>
         </div>
-      </section>
+      </section>}
 
       {/* ========================================================= */}
       {/* 8. ORGANIZERS (#organizers)                               */}
       {/* ========================================================= */}
-      <section id="organizers" className="py-16 px-4 md:px-8 max-w-6xl mx-auto w-full border-t border-[#E8B973]/30">
+      {showSection('organizers') && <section id="organizers" className="py-16 px-4 md:px-8 max-w-6xl mx-auto w-full border-t border-[#E8B973]/30">
         <div className="text-center mb-8">
           <span className="text-xs font-bold text-[#F05A0A] uppercase tracking-wider block mb-2">
             Organizing Committee
@@ -664,12 +669,12 @@ export default function Home() {
             </div>
           ))}
         </div>
-      </section>
+      </section>}
 
       {/* ========================================================= */}
       {/* 9. LOCATION & VENUE (#location)                           */}
       {/* ========================================================= */}
-      <section id="location" className="py-16 px-4 md:px-8 max-w-6xl mx-auto w-full border-t border-[#E8B973]/30">
+      {showSection('location') && <section id="location" className="py-16 px-4 md:px-8 max-w-6xl mx-auto w-full border-t border-[#E8B973]/30">
         <div className="bg-white rounded-3xl p-6 sm:p-10 border border-[#E8B973]/40 shadow-xs">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div>
@@ -703,12 +708,12 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </section>}
 
       {/* ========================================================= */}
       {/* 10. INSTRUCTIONS (#instructions)                          */}
       {/* ========================================================= */}
-      <section id="instructions" className="py-16 px-4 md:px-8 max-w-6xl mx-auto w-full border-t border-[#E8B973]/30">
+      {showSection('instructions') && <section id="instructions" className="py-16 px-4 md:px-8 max-w-6xl mx-auto w-full border-t border-[#E8B973]/30">
         <div className="text-center mb-8">
           <span className="text-xs font-bold text-[#F05A0A] uppercase tracking-wider block mb-2">
             Devotee Guidelines
@@ -726,12 +731,12 @@ export default function Home() {
             </div>
           ))}
         </div>
-      </section>
+      </section>}
 
       {/* ========================================================= */}
       {/* 11. CONTACT (#contact)                                    */}
       {/* ========================================================= */}
-      <section id="contact" className="py-16 px-4 md:px-8 max-w-6xl mx-auto w-full border-t border-[#E8B973]/30 mb-8">
+      {showSection('contact') && <section id="contact" className="py-16 px-4 md:px-8 max-w-6xl mx-auto w-full border-t border-[#E8B973]/30 mb-8">
         <div className="bg-white rounded-3xl p-6 sm:p-10 border border-[#E8B973]/40 shadow-xs text-center max-w-2xl mx-auto">
           <span className="text-xs font-bold text-[#F05A0A] uppercase tracking-wider block mb-2">
             Reach Out
@@ -753,7 +758,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </section>}
 
       {/* ========================================================= */}
       {/* LIGHTBOX MODAL                                            */}
@@ -797,9 +802,11 @@ export default function Home() {
             className="relative max-w-4xl w-full max-h-[85vh] flex flex-col items-center"
             onClick={e => e.stopPropagation()}
           >
-            <img 
+            <Image
               src={filteredGallery[lightboxIndex].imageUrl} 
               alt={filteredGallery[lightboxIndex].caption || 'Festival Photo'}
+              width={1600}
+              height={1200}
               className="max-h-[72vh] w-auto max-w-full rounded-2xl object-contain shadow-2xl border border-white/10"
             />
             <div className="mt-4 text-center">

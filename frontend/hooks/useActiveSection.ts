@@ -1,74 +1,67 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export function useActiveSection(sectionIds: string[], defaultSection: string = 'home') {
   const [activeSection, setActiveSection] = useState<string>(defaultSection);
-  const isClickScrolling = useRef(false);
-  const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
+  const animationFrame = useRef<number | null>(null);
 
   const sectionKey = sectionIds.join(',');
 
   useEffect(() => {
     const ids = sectionKey.split(',');
 
-    const handleScroll = () => {
-      if (isClickScrolling.current) return;
+    const updateActiveSection = () => {
+      animationFrame.current = null;
+      const sections = ids
+        .map((id) => document.getElementById(id))
+        .filter((section): section is HTMLElement => section !== null);
 
-      const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
-
-      // If near top of page, always home
-      if (scrollY < 80) {
-        setActiveSection(ids[0] || 'home');
+      if (sections.length === 0) {
         return;
       }
 
-      // If reached the bottom of page, activate last section
-      if (window.innerHeight + scrollY >= document.documentElement.scrollHeight - 60) {
-        setActiveSection(ids[ids.length - 1]);
-        return;
-      }
+      const marker = 96;
+      let current = sections[0].id;
 
-      // Trigger line: 35% down viewport (e.g. ~280px on 800px screen)
-      const trigger = Math.min(window.innerHeight * 0.35, 300);
-
-      let current = ids[0] || 'home';
-
-      for (let i = 0; i < ids.length; i++) {
-        const id = ids[i];
-        const el = document.getElementById(id);
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          if (rect.top <= trigger) {
-            current = id;
-          }
+      for (const section of sections) {
+        if (section.getBoundingClientRect().top <= marker) {
+          current = section.id;
+        } else {
+          break;
         }
       }
 
-      setActiveSection(current);
+      setActiveSection((previous) => previous === current ? previous : current);
+    };
+
+    const handleScroll = () => {
+      if (animationFrame.current === null) {
+        animationFrame.current = window.requestAnimationFrame(updateActiveSection);
+      }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('resize', handleScroll, { passive: true });
-
-    // Initial check
-    handleScroll();
+    updateActiveSection();
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleScroll);
-      if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
+      if (animationFrame.current !== null) {
+        window.cancelAnimationFrame(animationFrame.current);
+      }
     };
   }, [sectionKey]);
 
-  const setManualSection = (id: string) => {
+  const scrollToSection = (id: string) => {
+    const section = document.getElementById(id);
+    if (!section) return;
+
     setActiveSection(id);
-    isClickScrolling.current = true;
-    if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
-    scrollTimeout.current = setTimeout(() => {
-      isClickScrolling.current = false;
-    }, 850);
+    window.history.replaceState(null, '', `#${id}`);
+    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
-  return { activeSection, setManualSection };
+  return { activeSection, scrollToSection };
 }

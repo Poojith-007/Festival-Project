@@ -61,7 +61,7 @@ export default function AdminPage() {
               Announcements
             </h2>
             <p className="text-sm text-[#2D1B11]/75 leading-relaxed mb-6">
-              Form UI: Title input, Textarea for message, Priority Radio buttons (Normal/Emergency), and "Publish + Push Notification" submit button.
+              Form UI: Title input, Textarea for message, Priority Radio buttons (Normal/Emergency), and &quot;Publish + Push Notification&quot; submit button.
             </p>
             <div className="mt-auto text-xs font-bold text-[#F05A0A] flex items-center gap-1 group-hover:underline">
               <span>Create Announcement</span>
@@ -135,7 +135,7 @@ export default function AdminPage() {
                 Day State Toggler
               </h3>
               <p className="text-sm text-[#2D1B11]/75 mt-1 mb-3">
-                Admin needs a simple switch mechanism to change which day is currently flagged as "TODAY" on the public home screen.
+                Admin needs a simple switch mechanism to change which day is currently flagged as &quot;TODAY&quot; on the public home screen.
               </p>
               <div className="flex flex-wrap items-center gap-2">
                 <span className="text-xs font-bold text-[#2D1B11]/60">Select Flagged Day:</span>
@@ -217,7 +217,7 @@ export default function AdminPage() {
                 Finance Tracker (Optional)
               </h3>
               <p className="text-sm text-[#2D1B11]/75 mt-1 mb-3">
-                Input fields for 'Donations Collected' and categorized 'Expenses' to auto-calculate the remaining budget.
+                Input fields for &apos;Donations Collected&apos; and categorized &apos;Expenses&apos; to auto-calculate the remaining budget.
               </p>
               
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">

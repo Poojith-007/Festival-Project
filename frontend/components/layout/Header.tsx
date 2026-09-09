@@ -1,51 +1,29 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { useActiveSection } from '../../hooks/useActiveSection';
-import { Menu, X, Share2, Globe, Info, Users, MapPin, BookOpen, Phone } from 'lucide-react';
+import { Menu, X, Share2, Info, Users, MapPin, BookOpen, Phone } from 'lucide-react';
 import { festivalConfig } from '../../data/festival';
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [lang, setLang] = useState<'te' | 'en'>('te');
   const [copiedToast, setCopiedToast] = useState(false);
-
-  // Track all page sections
-  const { activeSection, setManualSection } = useActiveSection([
-    'home',
-    'days',
-    'day-details',
-    'updates',
-    'gallery',
-    'nimajjanam',
-    'about',
-    'organizers',
-    'location',
-    'instructions',
-    'contact'
-  ]);
+  const pathname = usePathname();
 
   // Determine which of the 5 primary tabs is active
   const getActiveTab = () => {
-    if (activeSection === 'home') return 'home';
-    if (activeSection === 'days' || activeSection === 'day-details') return 'days';
-    if (activeSection === 'updates') return 'updates';
-    if (activeSection === 'gallery') return 'gallery';
-    if (activeSection === 'nimajjanam') return 'nimajjanam';
+    if (pathname === '/') return 'home';
+    if (pathname.startsWith('/days')) return 'days';
+    if (pathname.startsWith('/updates')) return 'updates';
+    if (pathname.startsWith('/gallery')) return 'gallery';
+    if (pathname.startsWith('/nimajjanam')) return 'nimajjanam';
     return '';
   };
 
   const currentTab = getActiveTab();
-
-  const scrollToSection = (id: string) => {
-    setMenuOpen(false);
-    setManualSection(id);
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
 
   const handleShare = async () => {
     if (navigator.share) {
@@ -55,7 +33,7 @@ export default function Header() {
           text: `${festivalConfig.festivalName} - ${festivalConfig.villageName}`,
           url: window.location.href,
         });
-      } catch (err) {
+      } catch {
         // user cancelled
       }
     } else {
@@ -90,15 +68,16 @@ export default function Header() {
               <span>Menu</span>
             </button>
 
-            <button 
-              onClick={() => scrollToSection('home')}
+            <Link 
+              href="/"
+              onClick={() => setMenuOpen(false)}
               className="flex items-center gap-2 text-left cursor-pointer group"
             >
               <span className="text-xl">🕉️</span>
               <span className="font-bold text-[#F05A0A] text-sm sm:text-base font-telugu group-hover:opacity-85 transition-opacity">
                 {festivalConfig.festivalName}
               </span>
-            </button>
+            </Link>
           </div>
 
           {/* Desktop Center Navigation Tabs with Animated Spring Indicator */}
@@ -107,10 +86,12 @@ export default function Header() {
               const isActive = currentTab === item.id;
 
               return (
-                <button
+                <Link
                   key={item.id}
-                  onClick={() => scrollToSection(item.id)}
+                  href={item.id === 'home' ? '/' : `/${item.id}`}
+                  onClick={() => setMenuOpen(false)}
                   className="relative px-4 py-1.5 rounded-full text-sm font-semibold transition-colors cursor-pointer select-none"
+                  aria-current={isActive ? 'page' : undefined}
                 >
                   {/* Animated Active Pill Indicator */}
                   {isActive && (
@@ -128,7 +109,7 @@ export default function Header() {
                   >
                     {item.label}
                   </span>
-                </button>
+                </Link>
               );
             })}
           </nav>
@@ -188,11 +169,12 @@ export default function Header() {
                 { label: 'Contact Details', id: 'contact', icon: Phone },
               ].map((m) => {
                 const Icon = m.icon;
-                const isSectionActive = activeSection === m.id;
+                  const isSectionActive = pathname === `/${m.id}` || pathname === `/#${m.id}`;
                 return (
-                  <button
+                  <Link
                     key={m.id}
-                    onClick={() => scrollToSection(m.id)}
+                    href={`/#${m.id}`}
+                    onClick={() => setMenuOpen(false)}
                     className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left font-medium transition-colors cursor-pointer ${
                       isSectionActive 
                         ? 'bg-[#F05A0A] text-white font-bold' 
@@ -201,21 +183,22 @@ export default function Header() {
                   >
                     <Icon size={18} className={isSectionActive ? 'text-white' : 'text-[#F05A0A]'} />
                     <span>{m.label}</span>
-                  </button>
+                  </Link>
                 );
               })}
 
-              <button
-                onClick={() => scrollToSection('nimajjanam')}
+              <Link
+                href="/nimajjanam"
+                onClick={() => setMenuOpen(false)}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left font-bold transition-colors cursor-pointer ${
-                  activeSection === 'nimajjanam'
+                  pathname.startsWith('/nimajjanam')
                     ? 'bg-[#0284c7] text-white'
                     : 'text-[#0284c7] hover:bg-[#0284c7]/10'
                 }`}
               >
                 <span className="text-xl">🌊</span>
                 <span>Maha Nimajjanam</span>
-              </button>
+              </Link>
             </div>
 
             <div className="pt-3 border-t border-[#E8B973]/30">

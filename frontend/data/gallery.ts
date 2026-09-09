@@ -15,7 +15,7 @@ export const galleryItems: GalleryItem[] = [
   },
   { 
     id: 'g3', 
-    category: 'Day 9', 
+    category: 'Day 7',
     imageUrl: '/images/festival/procession_1788872924202.jpg', 
     caption: 'Nimajjanam Video' 
   },

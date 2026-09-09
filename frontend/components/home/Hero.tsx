@@ -2,7 +2,6 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { festivalConfig } from '../../data/festival';
 import { festivalDays } from '../../data/days';
-import Link from 'next/link';
 import { useRef } from 'react';
 
 export default function Hero() {
@@ -82,7 +81,7 @@ export default function Hero() {
             transition={{ duration: 0.8, delay: 0.5 }}
             className="text-lg md:text-xl italic text-ivory/80 max-w-2xl mx-auto"
           >
-            "{festivalConfig.themeMessage}"
+            &ldquo;{festivalConfig.themeMessage}&rdquo;
           </motion.p>
         </div>
         
@@ -99,10 +98,10 @@ export default function Hero() {
                 FESTIVAL IS LIVE
               </div>
               <div className="text-sm font-medium text-ivory/90 mb-3">
-                DAY {currentDay.dayNumber} / 7 • {currentDay.title}
+                DAY {currentDay.dayNumber} / {festivalDays.length} • {currentDay.title}
               </div>
               <div className="w-full bg-black/40 rounded-full h-1.5 mb-1 overflow-hidden">
-                <div className="bg-saffron h-1.5 rounded-full" style={{ width: `${(currentDay.dayNumber / 7) * 100}%` }}></div>
+                <div className="bg-saffron h-1.5 rounded-full" style={{ width: `${(currentDay.dayNumber / festivalDays.length) * 100}%` }}></div>
               </div>
             </div>
           </div>

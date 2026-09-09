@@ -86,39 +86,15 @@ export const festivalDays: FestivalDay[] = [
     id: 'day-7',
     dayNumber: 7,
     date: '20 Sep 2026',
-    title: 'Homam',
-    shortDescription: 'Special fire rituals.',
-    status: 'upcoming',
-    mainEvent: 'Maha Homam',
-    events: [
-      { id: 'e14', time: '09:00 AM', name: 'Chandi Homam' }
-    ]
-  },
-  {
-    id: 'day-8',
-    dayNumber: 8,
-    date: '21 Sep 2026',
-    title: 'Preparation for Farewell',
-    shortDescription: 'Final day of normal viewing.',
-    status: 'upcoming',
-    mainEvent: 'Sandhya Aarti',
-    events: [
-      { id: 'e15', time: '07:00 PM', name: 'Special Sandhya Aarti' }
-    ]
-  },
-  {
-    id: 'day-9',
-    dayNumber: 9,
-    date: '22 Sep 2026',
     title: 'Maha Nimajjanam',
-    shortDescription: 'The Grand Final Day immersion.',
+    shortDescription: 'The grand final-day immersion.',
     status: 'upcoming',
     mainEvent: 'Procession & Immersion',
-    image: '/images/festival/nimajjanam-background.jpg',
+    image: '/images/festival/nimajjanam_background_1788872905368.jpg',
     events: [
-      { id: 'e16', time: '08:00 AM', name: 'Final Puja' },
-      { id: 'e17', time: '10:00 AM', name: 'Procession Starts' },
-      { id: 'e18', time: '04:00 PM', name: 'Nimajjanam' }
+      { id: 'e14', time: '08:00 AM', name: 'Final Puja' },
+      { id: 'e15', time: '10:00 AM', name: 'Procession Starts' },
+      { id: 'e16', time: '04:00 PM', name: 'Nimajjanam' }
     ]
   }
 ];

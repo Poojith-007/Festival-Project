@@ -1,21 +1,19 @@
 {
   "name": "Sri Vinayaka Chavithi Mahotsavam",
   "short_name": "Ganesh Festival",
-  "description": "9 Days of Devotion • Celebration • Unity",
+  "description": "7 Days of Devotion • Celebration • Unity",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#fffbeb",
   "theme_color": "#f97316",
   "icons": [
     {
-      "src": "/placeholder.jpg",
-      "sizes": "192x192",
-      "type": "image/jpeg"
+      "src": "/festival-icon.png",
+      "type": "image/png"
     },
     {
-      "src": "/placeholder.jpg",
-      "sizes": "512x512",
-      "type": "image/jpeg"
+      "src": "/festival-icon.png",
+      "type": "image/png"
     }
   ]
 }

@@ -51,7 +51,6 @@ export default function DayDetailsPage({ params }: { params: { day: string } }) 
               <div key={event.id} className="flex items-start gap-4">
                 <span className="w-20 text-sm font-bold text-[#F05A0A] shrink-0 pt-0.5">{event.time}</span>
                 <span className="text-[#2D1B11] font-medium flex items-center gap-2">
-                  {/* @ts-ignore - Assuming icon might be present as per our updated days.ts */}
                   {event.icon && <span className="text-lg">{event.icon}</span>}
                   {event.name}
                 </span>

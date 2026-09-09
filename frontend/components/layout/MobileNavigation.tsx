@@ -1,48 +1,27 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { useActiveSection } from '../../hooks/useActiveSection';
 import { Home, Calendar, Bell, Image as ImageIcon, Menu, X, Info, Users, MapPin, BookOpen, Phone, Share2 } from 'lucide-react';
 import { festivalConfig } from '../../data/festival';
 
 export default function MobileNavigation() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [copiedToast, setCopiedToast] = useState(false);
-
-  const { activeSection, setManualSection } = useActiveSection([
-    'home',
-    'days',
-    'day-details',
-    'updates',
-    'gallery',
-    'nimajjanam',
-    'about',
-    'organizers',
-    'location',
-    'instructions',
-    'contact'
-  ]);
+  const pathname = usePathname();
 
   const getActiveTab = () => {
-    if (activeSection === 'home') return 'home';
-    if (activeSection === 'days' || activeSection === 'day-details') return 'days';
-    if (activeSection === 'updates') return 'updates';
-    if (activeSection === 'gallery') return 'gallery';
-    if (activeSection === 'nimajjanam') return 'nimajjanam';
+    if (pathname === '/') return 'home';
+    if (pathname.startsWith('/days')) return 'days';
+    if (pathname.startsWith('/updates')) return 'updates';
+    if (pathname.startsWith('/gallery')) return 'gallery';
+    if (pathname.startsWith('/nimajjanam')) return 'nimajjanam';
     return '';
   };
 
   const currentTab = getActiveTab();
-
-  const scrollToSection = (id: string) => {
-    setMenuOpen(false);
-    setManualSection(id);
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
 
   const handleShare = async () => {
     if (navigator.share) {
@@ -52,7 +31,7 @@ export default function MobileNavigation() {
           text: `${festivalConfig.festivalName} - ${festivalConfig.villageName}`,
           url: window.location.href,
         });
-      } catch (err) {
+      } catch {
         // cancelled
       }
     } else {
@@ -90,9 +69,10 @@ export default function MobileNavigation() {
             const isActive = currentTab === btn.id;
 
             return (
-              <button
+              <Link
                 key={btn.id}
-                onClick={() => scrollToSection(btn.id)}
+                href={btn.id === 'home' ? '/' : `/${btn.id}`}
+                onClick={() => setMenuOpen(false)}
                 className={`relative flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors active:scale-95 cursor-pointer ${
                   isActive ? "text-[#F05A0A] font-bold" : "text-[#2D1B11]/70 hover:text-[#F05A0A]"
                 }`}
@@ -113,7 +93,7 @@ export default function MobileNavigation() {
                   )}
                 </div>
                 <span className="text-[10px] tracking-tight relative z-10">{btn.label}</span>
-              </button>
+              </Link>
             );
           })}
         </div>
@@ -148,11 +128,12 @@ export default function MobileNavigation() {
                 { label: 'Contact Details', id: 'contact', icon: Phone },
               ].map(m => {
                 const Icon = m.icon;
-                const isSectionActive = activeSection === m.id;
+                const isSectionActive = pathname === `/${m.id}`;
                 return (
-                  <button
+                  <Link
                     key={m.id}
-                    onClick={() => scrollToSection(m.id)}
+                    href={`/#${m.id}`}
+                    onClick={() => setMenuOpen(false)}
                     className={`w-full flex items-center gap-3.5 p-3 rounded-xl text-left text-[15px] font-medium transition-colors cursor-pointer ${
                       isSectionActive 
                         ? 'bg-[#F05A0A] text-white font-bold' 
@@ -161,21 +142,22 @@ export default function MobileNavigation() {
                   >
                     <Icon size={20} className={isSectionActive ? 'text-white' : 'text-[#F05A0A]'} />
                     <span>{m.label}</span>
-                  </button>
+                  </Link>
                 );
               })}
 
-              <button
-                onClick={() => scrollToSection('nimajjanam')}
+              <Link
+                href="/nimajjanam"
+                onClick={() => setMenuOpen(false)}
                 className={`w-full flex items-center gap-3.5 p-3 rounded-xl text-left text-[15px] font-bold transition-colors cursor-pointer ${
-                  activeSection === 'nimajjanam'
+                  pathname.startsWith('/nimajjanam')
                     ? 'bg-[#0284c7] text-white'
                     : 'text-[#0284c7] bg-[#e0f2fe]/60 hover:bg-[#e0f2fe]'
                 }`}
               >
                 <span className="text-xl">🌊</span>
                 <span>Maha Nimajjanam</span>
-              </button>
+              </Link>
             </div>
 
             <div className="pt-3">
