@@ -1,7 +1,7 @@
 import { FestivalLocation } from '../types';
 
 export const festivalLocation: FestivalLocation = {
-  venue: 'Main Temple Grounds',
-  village: 'Sample Village Name',
-  address: 'Temple Street, Village Center, Andhra Pradesh',
+  venue: '64QC+V49, Suryaraopet, near, Machilipatnam, Andhra Pradesh 521366',
+  village: 'Suryaraopet',
+  address: '64QC+V49, Suryaraopet, near, Machilipatnam, Andhra Pradesh 521366',
 };

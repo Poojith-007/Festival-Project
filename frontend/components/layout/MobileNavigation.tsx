@@ -2,33 +2,37 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { motion } from 'framer-motion';
-import { Home, Calendar, Bell, Image as ImageIcon, Menu, X, Info, Users, MapPin, BookOpen, Phone, Share2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Home, Calendar, Bell, Image as ImageIcon, Menu, X, Info, Users, MapPin, BookOpen, Phone, Share2, IndianRupee, Globe } from 'lucide-react';
 import { festivalConfig } from '../../data/festival';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function MobileNavigation() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [copiedToast, setCopiedToast] = useState(false);
-  const pathname = usePathname();
+  const router = useRouter();
+  const { lang, setLang, t } = useLanguage();
 
-  const getActiveTab = () => {
-    if (pathname === '/') return 'home';
-    if (pathname.startsWith('/days')) return 'days';
-    if (pathname.startsWith('/updates')) return 'updates';
-    if (pathname.startsWith('/gallery')) return 'gallery';
-    if (pathname.startsWith('/nimajjanam')) return 'nimajjanam';
-    return '';
+  const navigateToSection = (sectionId: string) => {
+    setMenuOpen(false);
+    const routes: Record<string, string> = {
+      home: '/',
+      days: '/days',
+      updates: '/updates',
+      gallery: '/gallery',
+      nimajjanam: '/nimajjanam',
+      wallet: '/money',
+      money: '/money',
+    };
+    if (routes[sectionId]) router.push(routes[sectionId]);
   };
-
-  const currentTab = getActiveTab();
 
   const handleShare = async () => {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: festivalConfig.festivalName,
-          text: `${festivalConfig.festivalName} - ${festivalConfig.villageName}`,
+          title: lang === 'te' ? t.teluguTitle : festivalConfig.festivalName,
+          text: `${lang === 'te' ? t.teluguTitle : festivalConfig.festivalName} - ${festivalConfig.villageName}`,
           url: window.location.href,
         });
       } catch {
@@ -42,10 +46,10 @@ export default function MobileNavigation() {
   };
 
   const navButtons = [
-    { label: 'Home', id: 'home', icon: Home },
-    { label: 'Days', id: 'days', icon: Calendar },
-    { label: 'Updates', id: 'updates', icon: Bell, badge: '1' },
-    { label: 'Gallery', id: 'gallery', icon: ImageIcon },
+    { label: t.home, id: 'home', icon: Home },
+    { label: t.days, id: 'days', icon: Calendar },
+    { label: t.updates, id: 'updates', icon: Bell, badge: '1' },
+    { label: t.gallery, id: 'gallery', icon: ImageIcon },
   ];
 
   return (
@@ -55,35 +59,25 @@ export default function MobileNavigation() {
         <div className="flex justify-around items-center h-16 px-1 max-w-md mx-auto">
           {/* Menu Button */}
           <button
+            type="button"
             onClick={() => setMenuOpen(true)}
             className="flex flex-col items-center justify-center w-full h-full space-y-1 text-[#2D1B11]/70 hover:text-[#F05A0A] active:scale-95 transition-all cursor-pointer"
             aria-label="Open Menu"
           >
             <Menu size={20} className={menuOpen ? "text-[#F05A0A]" : ""} />
-            <span className={`text-[10px] font-semibold ${menuOpen ? "text-[#F05A0A]" : ""}`}>Menu</span>
+            <span className={`text-[10px] font-semibold ${menuOpen ? "text-[#F05A0A]" : ""}`}>{t.menu}</span>
           </button>
 
-          {/* Dynamic App Bar Buttons with animated indicator */}
+          {/* Dynamic App Bar Buttons with smooth scroll navigation */}
           {navButtons.map((btn) => {
             const Icon = btn.icon;
-            const isActive = currentTab === btn.id;
 
             return (
               <Link
                 key={btn.id}
                 href={btn.id === 'home' ? '/' : `/${btn.id}`}
-                onClick={() => setMenuOpen(false)}
-                className={`relative flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors active:scale-95 cursor-pointer ${
-                  isActive ? "text-[#F05A0A] font-bold" : "text-[#2D1B11]/70 hover:text-[#F05A0A]"
-                }`}
+                className="relative flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors active:scale-95 cursor-pointer text-[#2D1B11]/70 hover:text-[#F05A0A]"
               >
-                {isActive && (
-                  <motion.span
-                    layoutId="mobileActiveIndicator"
-                    className="absolute -top-[1px] w-8 h-1 bg-[#F05A0A] rounded-b-md z-20"
-                    transition={{ type: 'spring', stiffness: 500, damping: 32 }}
-                  />
-                )}
                 <div className="relative z-10">
                   <Icon size={20} />
                   {btn.badge && (
@@ -92,7 +86,7 @@ export default function MobileNavigation() {
                     </span>
                   )}
                 </div>
-                <span className="text-[10px] tracking-tight relative z-10">{btn.label}</span>
+                <span className="text-[10px] tracking-tight relative z-10 font-medium">{btn.label}</span>
               </Link>
             );
           })}
@@ -106,12 +100,13 @@ export default function MobileNavigation() {
           onClick={() => setMenuOpen(false)}
         >
           <div 
-            className="bg-[#FFF9F0] rounded-t-3xl border-t border-[#E8B973] p-6 max-h-[80vh] overflow-y-auto space-y-3 animate-in slide-in-from-bottom duration-300 shadow-2xl"
+            className="bg-[#FFF9F0] rounded-t-3xl border-t border-[#E8B973] p-6 max-h-[85vh] overflow-y-auto space-y-4 animate-in slide-in-from-bottom duration-300 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between items-center pb-3 border-b border-[#E8B973]/40">
-              <span className="font-bold text-[#F05A0A] text-lg font-telugu">Festival Menu</span>
+              <span className="font-bold text-[#F05A0A] text-lg font-telugu">{t.menuTitle}</span>
               <button 
+                type="button"
                 onClick={() => setMenuOpen(false)} 
                 className="text-[#2D1B11]/70 hover:text-[#F05A0A] p-1.5 cursor-pointer"
               >
@@ -119,54 +114,76 @@ export default function MobileNavigation() {
               </button>
             </div>
 
-            <div className="space-y-1 pt-1">
+            {/* Language Selector in Mobile Drawer */}
+            <div className="p-3 bg-white rounded-xl border border-[#E8B973]/50 flex items-center justify-between shadow-2xs">
+              <span className="text-xs font-bold text-[#2D1B11] flex items-center gap-1.5">
+                <Globe size={15} className="text-[#F05A0A]" />
+                <span>{t.selectLanguage}:</span>
+              </span>
+              <div className="flex items-center text-xs font-bold border border-[#F05A0A] rounded-full overflow-hidden bg-white">
+                <button
+                  type="button"
+                  onClick={() => setLang('en')}
+                  className={`px-3 py-1 transition-all cursor-pointer ${
+                    lang === 'en' ? 'bg-[#F05A0A] text-white' : 'text-[#F05A0A] hover:bg-[#F05A0A]/10'
+                  }`}
+                >
+                  English
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setLang('te')}
+                  className={`px-3 py-1 transition-all cursor-pointer ${
+                    lang === 'te' ? 'bg-[#F05A0A] text-white' : 'text-[#F05A0A] hover:bg-[#F05A0A]/10'
+                  }`}
+                >
+                  తెలుగు
+                </button>
+              </div>
+            </div>
+
+            {/* Drawer Menu Items */}
+            <div className="space-y-1">
               {[
-                { label: 'About Festival', id: 'about', icon: Info },
-                { label: 'Organizers & Committee', id: 'organizers', icon: Users },
-                { label: 'Location & Directions', id: 'location', icon: MapPin },
-                { label: 'Instructions & Guidelines', id: 'instructions', icon: BookOpen },
-                { label: 'Contact Details', id: 'contact', icon: Phone },
+                { label: t.aboutMenu, id: 'about', icon: Info },
+                { label: t.organizersMenu, id: 'organizers', icon: Users },
+                { label: t.locationMenu, id: 'location', icon: MapPin },
+                { label: t.instructionsMenu, id: 'instructions', icon: BookOpen },
+                { label: t.contactMenu, id: 'contact', icon: Phone },
+                { label: t.moneyMenu, id: 'money', icon: IndianRupee },
               ].map(m => {
                 const Icon = m.icon;
-                const isSectionActive = pathname === `/${m.id}`;
                 return (
-                  <Link
+                  <button
                     key={m.id}
-                    href={`/#${m.id}`}
-                    onClick={() => setMenuOpen(false)}
-                    className={`w-full flex items-center gap-3.5 p-3 rounded-xl text-left text-[15px] font-medium transition-colors cursor-pointer ${
-                      isSectionActive 
-                        ? 'bg-[#F05A0A] text-white font-bold' 
-                        : 'text-[#2D1B11] hover:bg-[#F05A0A]/10 active:bg-[#F05A0A]/15'
-                    }`}
+                    type="button"
+                    onClick={() => navigateToSection(m.id)}
+                    className="w-full flex items-center gap-3.5 p-3 rounded-xl text-left text-sm font-semibold transition-colors cursor-pointer text-[#2D1B11] hover:bg-[#F05A0A]/10 hover:text-[#F05A0A] active:bg-[#F05A0A]/15"
                   >
-                    <Icon size={20} className={isSectionActive ? 'text-white' : 'text-[#F05A0A]'} />
+                    <Icon size={19} className="text-[#F05A0A] shrink-0" />
                     <span>{m.label}</span>
-                  </Link>
+                  </button>
                 );
               })}
 
-              <Link
-                href="/nimajjanam"
-                onClick={() => setMenuOpen(false)}
-                className={`w-full flex items-center gap-3.5 p-3 rounded-xl text-left text-[15px] font-bold transition-colors cursor-pointer ${
-                  pathname.startsWith('/nimajjanam')
-                    ? 'bg-[#0284c7] text-white'
-                    : 'text-[#0284c7] bg-[#e0f2fe]/60 hover:bg-[#e0f2fe]'
-                }`}
+              <button
+                type="button"
+                onClick={() => navigateToSection('nimajjanam')}
+                className="w-full flex items-center gap-3.5 p-3 rounded-xl text-left text-sm font-bold text-[#0284c7] hover:bg-[#0284c7]/10 active:bg-[#0284c7]/15 cursor-pointer"
               >
-                <span className="text-xl">🌊</span>
-                <span>Maha Nimajjanam</span>
-              </Link>
+                <span className="text-lg">🌊</span>
+                <span>{t.nimajjanam}</span>
+              </button>
             </div>
 
-            <div className="pt-3">
+            <div className="pt-2 border-t border-[#E8B973]/40">
               <button
+                type="button"
                 onClick={handleShare}
-                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-[#F05A0A] text-[#F05A0A] font-bold text-sm bg-white shadow-xs cursor-pointer hover:bg-[#F05A0A] hover:text-white transition-colors"
+                className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-[#F05A0A] text-[#F05A0A] font-bold text-sm hover:bg-[#F05A0A] hover:text-white transition-all shadow-2xs cursor-pointer"
               >
-                <Share2 size={18} />
-                <span>{copiedToast ? 'Link Copied!' : 'Share Festival Link'}</span>
+                <Share2 size={16} />
+                <span>{copiedToast ? t.linkCopied : t.shareLink}</span>
               </button>
             </div>
           </div>

@@ -6,6 +6,7 @@ import Footer from "../components/layout/Footer";
 import MobileNavigation from "../components/layout/MobileNavigation";
 import PageTransition from "../components/layout/PageTransition";
 import { festivalConfig } from "../data/festival";
+import { LanguageProvider } from "../context/LanguageContext";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -41,12 +42,14 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${notoTelugu.variable} antialiased min-h-screen flex flex-col`}
       >
-        <Header />
-        <main className="flex-1 flex flex-col">
-          <PageTransition>{children}</PageTransition>
-        </main>
-        <Footer />
-        <MobileNavigation />
+        <LanguageProvider>
+          <Header />
+          <main className="flex-1 flex flex-col">
+            <PageTransition>{children}</PageTransition>
+          </main>
+          <Footer />
+          <MobileNavigation />
+        </LanguageProvider>
       </body>
     </html>
   );
