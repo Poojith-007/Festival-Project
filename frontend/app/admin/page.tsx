@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Calendar, Megaphone, Image as ImageIcon, ShieldCheck, ToggleLeft, Users, DollarSign, ArrowRight } from 'lucide-react';
 import { festivalDays } from '../../data/days';
+import { readFinanceSummary, saveFinanceSummary } from '../../lib/finance';
 
 export default function AdminPage() {
   const [activeDay, setActiveDay] = useState<number>(4);
@@ -12,6 +13,20 @@ export default function AdminPage() {
     'v2': false,
     'v3': true
   });
+  const [finance, setFinance] = useState(readFinanceSummary);
+  const [financeSaved, setFinanceSaved] = useState(false);
+
+  const handleFinanceSave = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const nextFinance = {
+      donations: Math.max(0, Number(finance.donations) || 0),
+      expenses: Math.max(0, Number(finance.expenses) || 0),
+    };
+    saveFinanceSummary(nextFinance);
+    setFinance(nextFinance);
+    setFinanceSaved(true);
+    window.setTimeout(() => setFinanceSaved(false), 2500);
+  };
 
   return (
     <div className="space-y-12 max-w-5xl mx-auto py-4">
@@ -207,31 +222,58 @@ export default function AdminPage() {
             </div>
           </div>
 
-          {/* Feature 4: Finance Tracker (Optional) */}
+          {/* Feature 4: Finance Tracker */}
           <div className="pt-6 flex items-start gap-4">
             <div className="w-10 h-10 rounded-xl bg-orange-100 text-[#F05A0A] flex items-center justify-center shrink-0 mt-0.5">
               <DollarSign size={22} />
             </div>
             <div className="flex-1">
               <h3 className="font-bold text-base text-[#2D1B11]">
-                Finance Tracker (Optional)
+                Finance Tracker
               </h3>
               <p className="text-sm text-[#2D1B11]/75 mt-1 mb-3">
-                Input fields for &apos;Donations Collected&apos; and categorized &apos;Expenses&apos; to auto-calculate the remaining budget.
+                Update the live donations and expenses shown on the public Wallet tab.
               </p>
-              
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-                <div className="p-3 bg-[#FFF9F0] border border-[#E8B973]/30 rounded-xl">
-                  <span className="text-[#2D1B11]/60 block font-semibold mb-1">Donations Collected</span>
-                  <span className="text-base font-bold text-green-700">₹ 2,45,000</span>
+
+              <form onSubmit={handleFinanceSave} className="space-y-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                  <label className="p-3 bg-[#FFF9F0] border border-[#E8B973]/30 rounded-xl font-semibold text-[#2D1B11]">
+                    Donations Received
+                    <input
+                      type="number"
+                      min="0"
+                      value={finance.donations}
+                      onChange={(event) => setFinance({ ...finance, donations: Number(event.target.value) })}
+                      className="mt-2 w-full rounded-lg border border-[#E8B973]/50 bg-white p-2 text-base font-bold text-green-700"
+                    />
+                  </label>
+                  <label className="p-3 bg-[#FFF9F0] border border-[#E8B973]/30 rounded-xl font-semibold text-[#2D1B11]">
+                    Expenses
+                    <input
+                      type="number"
+                      min="0"
+                      value={finance.expenses}
+                      onChange={(event) => setFinance({ ...finance, expenses: Number(event.target.value) })}
+                      className="mt-2 w-full rounded-lg border border-[#E8B973]/50 bg-white p-2 text-base font-bold text-red-600"
+                    />
+                  </label>
                 </div>
-                <div className="p-3 bg-[#FFF9F0] border border-[#E8B973]/30 rounded-xl">
-                  <span className="text-[#2D1B11]/60 block font-semibold mb-1">Categorized Expenses</span>
-                  <span className="text-base font-bold text-red-600">₹ 1,80,000</span>
+                <div className="flex flex-wrap items-center gap-3">
+                  <button type="submit" className="rounded-lg bg-[#F05A0A] px-4 py-2 text-sm font-bold text-white hover:bg-[#D04A08]">
+                    Save Finance Updates
+                  </button>
+                  {financeSaved && <span className="text-sm font-semibold text-green-700">Saved. Wallet updated.</span>}
                 </div>
+              </form>
+
+              <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                 <div className="p-3 bg-[#FFF9F0] border border-[#E8B973]/30 rounded-xl">
-                  <span className="text-[#2D1B11]/60 block font-semibold mb-1">Remaining Budget</span>
-                  <span className="text-base font-bold text-[#F05A0A]">₹ 65,000</span>
+                  <span className="text-[#2D1B11]/60 block font-semibold mb-1">Current Balance</span>
+                  <span className="text-base font-bold text-[#F05A0A]">₹ {(finance.donations - finance.expenses).toLocaleString('en-IN')}</span>
+                </div>
+                <div className="p-3 bg-[#FFF9F0] border border-[#E8B973]/30 rounded-xl sm:col-span-2">
+                  <span className="text-[#2D1B11]/60 block font-semibold mb-1">How to update</span>
+                  <span className="text-[#2D1B11]/75">Enter the latest amounts and select Save Finance Updates. Open the public Wallet tab to see the new balance.</span>
                 </div>
               </div>
             </div>

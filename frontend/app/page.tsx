@@ -1,11 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { festivalConfig } from '../data/festival';
 import { galleryItems } from '../data/gallery';
 import { useLanguage } from '../context/LanguageContext';
+import { defaultFinanceSummary, financeSnapshot, subscribeToFinance } from '../lib/finance';
+import { announcementsSnapshot, subscribeToAnnouncements, StoredAnnouncement } from '../lib/announcements';
 import { 
   ArrowRight, 
   Bell, 
@@ -24,6 +26,12 @@ import {
 export default function Home() {
   const pathname = usePathname();
   const { lang, t, days, instructions, committee } = useLanguage();
+  const announcementsData = useSyncExternalStore(
+    subscribeToAnnouncements,
+    announcementsSnapshot,
+    announcementsSnapshot,
+  );
+  const liveAnnouncements = JSON.parse(announcementsData) as StoredAnnouncement[];
 
   // Each primary navigation tab renders only its matching section.
   const showSection = (section: string) => {
@@ -135,9 +143,13 @@ export default function Home() {
   const countdown = { hrs: 2, min: 14, sec: 32 };
 
   // 5. Money & Budget Summary Figures
-  const donationTotal = 145000;
-  const expenseTotal = 98500;
-  const balanceTotal = 46500;
+  const financeSummary = useSyncExternalStore(
+    subscribeToFinance,
+    financeSnapshot,
+    () => JSON.stringify(defaultFinanceSummary),
+  );
+  const { donations: donationTotal, expenses: expenseTotal } = JSON.parse(financeSummary);
+  const balanceTotal = donationTotal - expenseTotal;
 
   const handleSelectDay = (dayId: string) => {
     setSelectedDayId(dayId);
@@ -184,7 +196,7 @@ export default function Home() {
                   {t.heroBadge}
                 </span>
                 <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#2D1B11] font-telugu leading-snug">
-                  {lang === 'te' ? t.teluguTitle : t.festivalTitle}
+                  {lang === 'te' ? t.festivalTitle : t.teluguTitle}
                 </h1>
                 <p className="text-base sm:text-lg font-semibold text-[#2D1B11]/75 mt-2">
                   [ {t.villageName} ]
@@ -468,36 +480,25 @@ export default function Home() {
             {/* Left Side: Update Cards & Push Button */}
             <div className="space-y-5 flex flex-col justify-between">
               
-              {/* Card 1: Live Update (High Priority) */}
-              <div className="bg-white rounded-2xl p-6 border-l-4 border-l-red-500 border border-[#E8B973]/40 shadow-xs">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="font-bold text-red-600 text-sm tracking-wide flex items-center gap-1.5">
-                    <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse"></span>
-                    {t.liveUpdateBadge}
-                  </span>
-                  <span className="text-xs text-[#2D1B11]/50 font-medium">
-                    {t.liveUpdate1Time}
-                  </span>
-                </div>
-                <p className="font-bold text-base sm:text-lg text-[#2D1B11]">
-                  {t.liveUpdate1Title}
-                </p>
-              </div>
-
-              {/* Card 2: Program Change */}
-              <div className="bg-white rounded-2xl p-6 border-l-4 border-l-[#F05A0A] border border-[#E8B973]/40 shadow-xs">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="font-bold text-[#F05A0A] text-sm tracking-wide flex items-center gap-1.5">
-                    <span>📢</span> {t.programChangeBadge}
-                  </span>
-                  <span className="text-xs text-[#2D1B11]/50 font-medium">
-                    {t.liveUpdate2Time}
-                  </span>
-                </div>
-                <p className="font-semibold text-sm sm:text-base text-[#2D1B11]/85 leading-relaxed">
-                  {t.liveUpdate2Title}
-                </p>
-              </div>
+              {liveAnnouncements.map((announcement, index) => {
+                const isEmergency = announcement.type === 'emergency';
+                const isImportant = announcement.type === 'important';
+                return (
+                  <div key={announcement.id} className={`bg-white rounded-2xl p-6 border-l-4 ${isEmergency ? 'border-l-red-500' : 'border-l-[#F05A0A]'} border border-[#E8B973]/40 shadow-xs`}>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className={`font-bold ${isEmergency ? 'text-red-600' : 'text-[#F05A0A]'} text-sm tracking-wide flex items-center gap-1.5`}>
+                        {isEmergency && <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse"></span>}
+                        {isEmergency ? t.liveUpdateBadge : isImportant ? t.programChangeBadge : 'Update'}
+                      </span>
+                      <span className="text-xs text-[#2D1B11]/50 font-medium">{announcement.timestamp}</span>
+                    </div>
+                    <p className={`${isEmergency || index === 0 ? 'font-bold text-base sm:text-lg' : 'font-semibold text-sm sm:text-base'} text-[#2D1B11]/90 leading-relaxed`}>
+                      {announcement.title && <span className="block text-[#F05A0A] mb-1">{announcement.title}</span>}
+                      {announcement.message}
+                    </p>
+                  </div>
+                );
+              })}
 
               {/* Real Working Push Notification Button */}
               <div>
