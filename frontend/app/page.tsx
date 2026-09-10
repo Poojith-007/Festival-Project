@@ -6,8 +6,12 @@ import { usePathname } from 'next/navigation';
 import { festivalConfig } from '../data/festival';
 import { galleryItems } from '../data/gallery';
 import { useLanguage } from '../context/LanguageContext';
-import { defaultFinanceSummary, financeSnapshot, subscribeToFinance } from '../lib/finance';
-import { announcementsSnapshot, subscribeToAnnouncements, StoredAnnouncement } from '../lib/announcements';
+import { defaultFinanceSummary, financeSnapshot, saveFinanceSummary, subscribeToFinance } from '../lib/finance';
+import { announcementsSnapshot, saveAnnouncements, subscribeToAnnouncements, StoredAnnouncement } from '../lib/announcements';
+import { fetchLiveAnnouncements, fetchLiveFinance, isApiConfigured } from '../lib/services/api';
+import { useLiveFestivalDays } from '../lib/services/liveDays';
+import { useProcessionCountdown, useProcessionStartAt } from '../lib/services/nimajjanam';
+import { requestPushToken } from '../lib/notifications';
 import { 
   ArrowRight, 
   Bell, 
@@ -25,13 +29,31 @@ import {
 
 export default function Home() {
   const pathname = usePathname();
-  const { lang, t, days, instructions, committee } = useLanguage();
+  const { lang, t, instructions, committee } = useLanguage();
+  const days = useLiveFestivalDays();
   const announcementsData = useSyncExternalStore(
     subscribeToAnnouncements,
     announcementsSnapshot,
     announcementsSnapshot,
   );
   const liveAnnouncements = JSON.parse(announcementsData) as StoredAnnouncement[];
+
+  useEffect(() => {
+    if (!isApiConfigured) return;
+
+    void fetchLiveFinance()
+      .then((summary) => saveFinanceSummary(summary))
+      .catch(() => undefined);
+    void fetchLiveAnnouncements()
+      .then((items) => saveAnnouncements(items.map((item) => ({
+        id: String(item.id),
+        title: typeof item.title === 'string' ? item.title : undefined,
+        type: item.priority === 'emergency' || item.priority === 'important' ? item.priority : 'normal',
+        message: String(item.message || ''),
+        timestamp: typeof item.createdAt === 'string' ? item.createdAt : 'Published',
+      }))))
+      .catch(() => undefined);
+  }, []);
 
   // Each primary navigation tab renders only its matching section.
   const showSection = (section: string) => {
@@ -121,6 +143,8 @@ export default function Home() {
       setTimeout(() => setNotificationMsg(''), 4000);
 
       try {
+        const push = await requestPushToken();
+        if (push.token) localStorage.setItem('festival_push_token', push.token);
         new Notification(lang === 'te' ? t.teluguTitle : festivalConfig.festivalName, {
           body: t.notificationWelcome,
           icon: '/images/festival/ganesh-idol.jpg',
@@ -139,8 +163,9 @@ export default function Home() {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [videoModalOpen, setVideoModalOpen] = useState<boolean>(false);
 
-  // 4. Nimajjanam Live Countdown State (Mock: 02:14:32)
-  const countdown = { hrs: 2, min: 14, sec: 32 };
+  // 4. Nimajjanam countdown from the configured Firestore timestamp.
+  const processionStartAt = useProcessionStartAt();
+  const countdown = useProcessionCountdown(processionStartAt);
 
   // 5. Money & Budget Summary Figures
   const financeSummary = useSyncExternalStore(
@@ -665,7 +690,7 @@ export default function Home() {
             {/* Left: Large Digital Countdown */}
             <div className="bg-[#e0f2fe]/60 border border-[#bae6fd] rounded-3xl p-8 sm:p-12 text-center shadow-xs flex flex-col items-center justify-center">
               <div className="text-5xl sm:text-6xl md:text-7xl font-bold text-[#F05A0A] font-mono tracking-tight mb-2">
-                {String(countdown.hrs).padStart(2, '0')}:{String(countdown.min).padStart(2, '0')}:{String(countdown.sec).padStart(2, '0')}
+                {countdown ? `${String(countdown.hrs).padStart(2, '0')}:${String(countdown.min).padStart(2, '0')}:${String(countdown.sec).padStart(2, '0')}` : '--:--:--'}
               </div>
               <div className="text-xs sm:text-sm font-bold tracking-[0.25em] text-[#0c4a6e]/70 uppercase mb-3">
                 {t.countdownUnits}

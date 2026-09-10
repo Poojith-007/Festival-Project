@@ -9,11 +9,9 @@
   "icons": [
     {
       "src": "/festival-icon.png",
-      "type": "image/png"
-    },
-    {
-      "src": "/festival-icon.png",
-      "type": "image/png"
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
     }
   ]
 }

@@ -7,6 +7,8 @@ import MobileNavigation from "../components/layout/MobileNavigation";
 import PageTransition from "../components/layout/PageTransition";
 import { festivalConfig } from "../data/festival";
 import { LanguageProvider } from "../context/LanguageContext";
+import { AdminAuthProvider } from "../context/AdminAuthContext";
+import ServiceWorkerRegistration from "../components/layout/ServiceWorkerRegistration";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -43,12 +45,15 @@ export default function RootLayout({
         className={`${inter.variable} ${notoTelugu.variable} antialiased min-h-screen flex flex-col`}
       >
         <LanguageProvider>
-          <Header />
-          <main className="flex-1 flex flex-col">
-            <PageTransition>{children}</PageTransition>
-          </main>
-          <Footer />
-          <MobileNavigation />
+          <AdminAuthProvider>
+            <ServiceWorkerRegistration />
+            <Header />
+            <main className="flex-1 flex flex-col">
+              <PageTransition>{children}</PageTransition>
+            </main>
+            <Footer />
+            <MobileNavigation />
+          </AdminAuthProvider>
         </LanguageProvider>
       </body>
     </html>

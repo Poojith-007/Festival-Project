@@ -16,3 +16,10 @@ backend/node_modules/
 backend/.venv/
 backend/__pycache__/
 backend/*.pyc
+backend/.env
+backend/.env.*
+!backend/.env.example
+service-account*.json
+*-service-account.json
+firebase-debug.log
+.firebase/

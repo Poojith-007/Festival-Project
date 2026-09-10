@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { Calendar, Megaphone, Image as ImageIcon, ShieldCheck, ToggleLeft, Users, DollarSign, ArrowRight } from 'lucide-react';
 import { festivalDays } from '../../data/days';
 import { readFinanceSummary, saveFinanceSummary } from '../../lib/finance';
+import { isApiConfigured, saveLiveFinance } from '../../lib/services/api';
+import { useAdminAuth } from '../../context/AdminAuthContext';
 
 export default function AdminPage() {
   const [activeDay, setActiveDay] = useState<number>(4);
@@ -15,17 +17,25 @@ export default function AdminPage() {
   });
   const [finance, setFinance] = useState(readFinanceSummary);
   const [financeSaved, setFinanceSaved] = useState(false);
+  const [financeError, setFinanceError] = useState('');
+  const { user } = useAdminAuth();
 
-  const handleFinanceSave = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleFinanceSave = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setFinanceError('');
     const nextFinance = {
       donations: Math.max(0, Number(finance.donations) || 0),
       expenses: Math.max(0, Number(finance.expenses) || 0),
     };
-    saveFinanceSummary(nextFinance);
-    setFinance(nextFinance);
-    setFinanceSaved(true);
-    window.setTimeout(() => setFinanceSaved(false), 2500);
+    try {
+      if (isApiConfigured && user) await saveLiveFinance(nextFinance, user);
+      saveFinanceSummary(nextFinance);
+      setFinance(nextFinance);
+      setFinanceSaved(true);
+      window.setTimeout(() => setFinanceSaved(false), 2500);
+    } catch {
+      setFinanceError('Finance could not be saved to the live database. Check the backend connection and try again.');
+    }
   };
 
   return (
@@ -263,6 +273,7 @@ export default function AdminPage() {
                     Save Finance Updates
                   </button>
                   {financeSaved && <span className="text-sm font-semibold text-green-700">Saved. Wallet updated.</span>}
+                  {financeError && <span className="text-sm font-semibold text-red-600">{financeError}</span>}
                 </div>
               </form>
 

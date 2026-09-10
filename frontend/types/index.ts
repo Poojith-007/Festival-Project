@@ -35,6 +35,7 @@ export interface FestivalDay {
   status: EventStatus;
   mainEvent: string;
   image?: string;
+  announcement?: string;
   events: FestivalEvent[];
 }
 

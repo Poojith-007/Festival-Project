@@ -2,32 +2,43 @@
 
 import { useState } from 'react';
 import { readAnnouncements, saveAnnouncements } from '../../../lib/announcements';
+import { useAdminAuth } from '../../../context/AdminAuthContext';
+import { isApiConfigured, publishLiveAnnouncement } from '../../../lib/services/api';
 
 export default function AdminAnnouncementsPage() {
   const [title, setTitle] = useState('');
   const [message, setMessage] = useState('');
   const [type, setType] = useState<'normal' | 'important' | 'emergency'>('normal');
   const [saved, setSaved] = useState(false);
+  const [error, setError] = useState('');
+  const { user } = useAdminAuth();
 
-  const handlePublish = (event: React.FormEvent<HTMLFormElement>) => {
+  const handlePublish = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!message.trim()) return;
+    setError('');
 
-    saveAnnouncements([
-      {
-        id: `admin-${Date.now()}`,
-        title: title.trim() || undefined,
-        type,
-        message: message.trim(),
-        timestamp: 'Just now',
-      },
-      ...readAnnouncements(),
-    ]);
-    setTitle('');
-    setMessage('');
-    setType('normal');
-    setSaved(true);
-    window.setTimeout(() => setSaved(false), 2500);
+    const announcement = {
+      title: title.trim(),
+      message: message.trim(),
+      priority: type,
+      published: true,
+    };
+
+    try {
+      if (isApiConfigured && user) await publishLiveAnnouncement(announcement, user);
+      saveAnnouncements([
+        { id: `admin-${Date.now()}`, title: title.trim() || undefined, type, message: message.trim(), timestamp: 'Just now' },
+        ...readAnnouncements(),
+      ]);
+      setTitle('');
+      setMessage('');
+      setType('normal');
+      setSaved(true);
+      window.setTimeout(() => setSaved(false), 2500);
+    } catch {
+      setError('Announcement could not be saved to the live database. Check the backend connection and try again.');
+    }
   };
 
   return (
@@ -57,6 +68,7 @@ export default function AdminAnnouncementsPage() {
             Publish + Push Notification
           </button>
           {saved && <p className="text-sm font-semibold text-green-700">Published. Updates tab refreshed.</p>}
+          {error && <p className="text-sm font-semibold text-red-600">{error}</p>}
         </form>
       </div>
     </div>
