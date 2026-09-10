@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { festivalConfig } from '../data/festival';
 import { galleryItems } from '../data/gallery';
@@ -26,7 +27,9 @@ export default function Home() {
 
   // Each primary navigation tab renders only its matching section.
   const showSection = (section: string) => {
-    if (pathname === '/') return section === 'home';
+    if (pathname === '/') {
+      return ['home', 'about', 'organizers', 'location', 'instructions', 'contact'].includes(section);
+    }
     if (pathname === '/days') return section === 'days' || section === 'day-details';
     if (pathname === '/updates') return section === 'updates';
     if (pathname === '/gallery') return section === 'gallery';
@@ -226,14 +229,13 @@ export default function Home() {
                   ))}
                 </div>
 
-                <button
-                  type="button"
-                  onClick={() => scrollToSection('days')}
+                <Link
+                  href="/days"
                   className="w-full bg-[#F05A0A] hover:bg-[#D04A08] text-white font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 transition-all shadow-xs cursor-pointer active:scale-98 text-sm sm:text-base"
                 >
                   <span>{t.viewScheduleBtn}</span>
                   <ArrowRight size={18} />
-                </button>
+                </Link>
               </div>
 
             </div>

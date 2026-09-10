@@ -2,17 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Menu, X, Share2, Info, Users, MapPin, BookOpen, Phone, IndianRupee, Globe } from 'lucide-react';
 import { festivalConfig } from '../../data/festival';
 import { useLanguage } from '../../context/LanguageContext';
 
 export default function Header() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [copiedToast, setCopiedToast] = useState(false);
   const pathname = usePathname();
-  const router = useRouter();
   const { lang, setLang, t } = useLanguage();
 
   const [activeTab, setActiveTab] = useState<string>('home');
@@ -51,39 +47,6 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [pathname]);
 
-  const navigateToSection = (sectionId: string) => {
-    setMenuOpen(false);
-
-    const routes: Record<string, string> = {
-      home: '/',
-      days: '/days',
-      updates: '/updates',
-      gallery: '/gallery',
-      nimajjanam: '/nimajjanam',
-      wallet: '/money',
-      money: '/money',
-    };
-    if (routes[sectionId]) router.push(routes[sectionId]);
-  };
-
-  const handleShare = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: lang === 'te' ? t.teluguTitle : festivalConfig.festivalName,
-          text: `${lang === 'te' ? t.teluguTitle : festivalConfig.festivalName} - ${festivalConfig.villageName}`,
-          url: window.location.href,
-        });
-      } catch {
-        // user cancelled
-      }
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      setCopiedToast(true);
-      setTimeout(() => setCopiedToast(false), 2000);
-    }
-  };
-
   const navItems = [
     { label: t.home, id: 'home' },
     { label: t.days, id: 'days' },
@@ -99,28 +62,17 @@ export default function Header() {
       <header className="sticky top-0 z-50 w-full border-t-4 border-[#F05A0A] border-b border-[#E8B973]/40 bg-[#FFF9F0] shadow-[0_2px_10px_rgba(240,90,10,0.06)]">
         <div className="max-w-6xl mx-auto flex h-16 items-center justify-between px-3 sm:px-4">
           
-          {/* Left: Menu trigger & Branding */}
+          {/* Left: Branding */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-            <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              type="button"
-              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg border border-[#E8B973]/60 bg-white text-[#2D1B11] font-semibold text-xs sm:text-sm hover:border-[#F05A0A] hover:text-[#F05A0A] transition-all shadow-xs cursor-pointer active:scale-95"
-              aria-label="Toggle Menu"
-            >
-              {menuOpen ? <X size={18} /> : <Menu size={18} />}
-              <span>{t.menu}</span>
-            </button>
-
-            <button 
-              onClick={() => navigateToSection('home')}
-              type="button"
+            <Link
+              href="/"
               className="flex items-center gap-1.5 text-left cursor-pointer group"
             >
               <span className="text-lg sm:text-xl">🕉️</span>
               <span className="font-bold text-[#F05A0A] text-xs sm:text-base font-telugu group-hover:opacity-85 transition-opacity truncate max-w-[160px] sm:max-w-none">
                 {lang === 'te' ? t.teluguTitle : festivalConfig.festivalName}
               </span>
-            </button>
+            </Link>
           </div>
 
           {/* Desktop Center Navigation Tabs with Animated Spring Indicator */}
@@ -190,102 +142,6 @@ export default function Header() {
         </div>
       </header>
 
-      {/* Menu Overlay / Drawer */}
-      {menuOpen && (
-        <div 
-          className="fixed inset-0 z-40 bg-black/40 backdrop-blur-xs flex items-start justify-start pt-16 animate-in fade-in duration-200"
-          onClick={() => setMenuOpen(false)}
-        >
-          <div 
-            className="w-full max-w-sm bg-[#FFF9F0] border-r border-b border-[#E8B973] shadow-2xl p-6 space-y-4 max-h-[88vh] overflow-y-auto animate-in slide-in-from-left duration-200"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between pb-3 border-b border-[#E8B973]/30">
-              <h3 className="font-bold text-[#F05A0A] text-lg font-telugu">{t.menuTitle}</h3>
-              <button 
-                type="button"
-                onClick={() => setMenuOpen(false)}
-                className="text-[#2D1B11]/60 hover:text-[#F05A0A] p-1 cursor-pointer"
-              >
-                <X size={20} />
-              </button>
-            </div>
-
-            {/* Language Selection inside Drawer */}
-            <div className="p-3 bg-white rounded-xl border border-[#E8B973]/50 flex items-center justify-between shadow-2xs">
-              <span className="text-xs font-bold text-[#2D1B11] flex items-center gap-1.5">
-                <Globe size={15} className="text-[#F05A0A]" />
-                <span>{t.selectLanguage}:</span>
-              </span>
-              <div className="flex items-center text-xs font-bold border border-[#F05A0A] rounded-full overflow-hidden bg-white">
-                <button
-                  type="button"
-                  onClick={() => setLang('en')}
-                  className={`px-3 py-1 transition-all cursor-pointer ${
-                    lang === 'en' ? 'bg-[#F05A0A] text-white' : 'text-[#F05A0A] hover:bg-[#F05A0A]/10'
-                  }`}
-                >
-                  English
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setLang('te')}
-                  className={`px-3 py-1 transition-all cursor-pointer ${
-                    lang === 'te' ? 'bg-[#F05A0A] text-white' : 'text-[#F05A0A] hover:bg-[#F05A0A]/10'
-                  }`}
-                >
-                  తెలుగు
-                </button>
-              </div>
-            </div>
-
-            {/* Navigation Options with Instant Smooth Scrolling */}
-            <div className="space-y-1">
-              {[
-                { label: t.aboutMenu, id: 'about', icon: Info },
-                { label: t.organizersMenu, id: 'organizers', icon: Users },
-                { label: t.locationMenu, id: 'location', icon: MapPin },
-                { label: t.instructionsMenu, id: 'instructions', icon: BookOpen },
-                { label: t.contactMenu, id: 'contact', icon: Phone },
-                { label: t.moneyMenu, id: 'money', icon: IndianRupee },
-              ].map((m) => {
-                const Icon = m.icon;
-                return (
-                  <button
-                    key={m.id}
-                    type="button"
-                    onClick={() => navigateToSection(m.id)}
-                    className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left font-medium transition-colors cursor-pointer text-[#2D1B11] hover:bg-[#F05A0A]/10 hover:text-[#F05A0A] active:bg-[#F05A0A]/15"
-                  >
-                    <Icon size={18} className="text-[#F05A0A] shrink-0" />
-                    <span className="font-semibold text-sm">{m.label}</span>
-                  </button>
-                );
-              })}
-
-              <button
-                type="button"
-                onClick={() => navigateToSection('nimajjanam')}
-                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left font-bold transition-colors cursor-pointer text-[#0284c7] hover:bg-[#0284c7]/10 active:bg-[#0284c7]/15"
-              >
-                <span className="text-xl">🌊</span>
-                <span>{t.nimajjanam}</span>
-              </button>
-            </div>
-
-            <div className="pt-3 border-t border-[#E8B973]/30">
-              <button
-                type="button"
-                onClick={handleShare}
-                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border border-[#F05A0A] text-[#F05A0A] font-bold text-sm hover:bg-[#F05A0A] hover:text-white transition-all shadow-2xs cursor-pointer"
-              >
-                <Share2 size={16} />
-                <span>{copiedToast ? t.linkCopied : t.shareLink}</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 }
