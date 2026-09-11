@@ -5,7 +5,27 @@ import { db } from './firebase/admin.js';
 import { requireAdmin, type AuthenticatedRequest } from './middleware/auth.js';
 
 const app = express();
-app.use(cors({ origin: env.FRONTEND_ORIGIN }));
+
+const allowedOrigins = [
+  env.FRONTEND_DEV_ORIGIN,
+  env.FRONTEND_PROD_ORIGIN,
+];
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Allow requests without an Origin header
+      // and requests from our development/production frontend.
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true,
+  }),
+);
+
 app.use(express.json({ limit: '1mb' }));
 
 app.get('/health', (_req, res) => {
