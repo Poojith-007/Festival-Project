@@ -205,75 +205,42 @@ export default function Home() {
       {/* ========================================================= */}
       {showSection('home') && (
         <section id="home" className="pt-6 sm:pt-10 pb-12 sm:pb-16 px-4 md:px-8 max-w-6xl mx-auto w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-stretch">
             
-            {/* Left Column: 3 Compact Outlined Cards */}
-            <div className="flex flex-col justify-between space-y-6">
-              
-              {/* Card 1: Hero Header */}
-              <div className="bg-white rounded-3xl p-6 sm:p-7 border border-[#E8B973]/40 shadow-xs hover:border-[#F05A0A]/40 transition-colors">
-                <span className="text-xs font-bold text-[#F05A0A] uppercase tracking-wider block mb-2 font-sans">
-                  {t.heroBadge}
-                </span>
-                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#2D1B11] font-telugu leading-snug">
-                  {lang === 'te' ? t.festivalTitle : t.teluguTitle}
-                </h1>
-                <p className="text-base sm:text-lg font-semibold text-[#2D1B11]/75 mt-2">
-                  [ {t.villageName} ]
-                </p>
-              </div>
-
-              {/* Card 2: Live Progress Bar */}
-              <div className="bg-white rounded-3xl p-6 sm:p-7 border border-[#E8B973]/40 shadow-xs">
-                <span className="text-xs font-bold text-[#F05A0A] uppercase tracking-wider block mb-2 font-sans">
-                  {t.liveStatus}
-                </span>
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="inline-block w-3 h-3 rounded-full bg-green-500 animate-pulse"></span>
-                  <span className="font-bold text-sm sm:text-base text-[#2D1B11] tracking-wide">
-                    {t.liveStatus} - {t.dayWord} {currentDay.dayNumber} / {days.length}
-                  </span>
-                </div>
-                <div className="w-full bg-[#FFF9F0] rounded-full h-3 overflow-hidden border border-[#E8B973]/30">
-                  <div 
-                    className="bg-[#F05A0A] h-3 rounded-full transition-all duration-700" 
-                    style={{ width: `${(currentDay.dayNumber / days.length) * 100}%` }}
-                  ></div>
-                </div>
-              </div>
-
-              {/* Card 3: Today's Quick Schedule */}
-              <div className="bg-white rounded-3xl p-6 sm:p-7 border border-[#E8B973]/40 shadow-xs">
-                <span className="text-xs font-bold text-[#F05A0A] uppercase tracking-wider block mb-4 font-sans">
-                  {t.todayQuickSchedule}
-                </span>
-                <div className="space-y-3 mb-6">
-                  {currentDay.events.slice(0, 4).map((event) => (
-                    <div key={event.id} className="flex items-center gap-3 sm:gap-4 text-sm sm:text-base">
-                      <span className="w-20 sm:w-22 font-bold text-[#F05A0A] shrink-0 font-mono text-xs sm:text-sm">
-                        {event.time}
-                      </span>
-                      <span className="font-medium text-[#2D1B11] flex items-center gap-1.5 truncate">
-                        {event.icon && <span>{event.icon}</span>}
-                        <span>{event.name}</span>
-                      </span>
-                    </div>
-                  ))}
-                </div>
-
-                <Link
-                  href="/days"
-                  className="w-full bg-[#F05A0A] hover:bg-[#D04A08] text-white font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 transition-all shadow-xs cursor-pointer active:scale-98 text-sm sm:text-base"
-                >
-                  <span>{t.viewScheduleBtn}</span>
-                  <ArrowRight size={18} />
-                </Link>
-              </div>
-
+            {/* Card 1: Hero Header */}
+            <div className="lg:col-start-1 lg:row-start-1 bg-white rounded-3xl p-6 sm:p-7 border border-[#E8B973]/40 shadow-xs hover:border-[#F05A0A]/40 transition-colors">
+              <span className="text-xs font-bold text-[#F05A0A] uppercase tracking-wider block mb-2 font-sans">
+                {t.heroBadge}
+              </span>
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#2D1B11] font-telugu leading-snug">
+                {lang === 'te' ? t.festivalTitle : t.teluguTitle}
+              </h1>
+              <p className="text-base sm:text-lg font-semibold text-[#2D1B11]/75 mt-2">
+                [ {t.villageName} ]
+              </p>
             </div>
 
-            {/* Right Column: Large Ganesh Idol Image Container */}
-            <div className="flex items-center justify-center">
+            {/* Card 2: Live Progress Bar */}
+            <div className="lg:col-start-1 lg:row-start-2 bg-white rounded-3xl p-6 sm:p-7 border border-[#E8B973]/40 shadow-xs">
+              <span className="text-xs font-bold text-[#F05A0A] uppercase tracking-wider block mb-2 font-sans">
+                {t.liveStatus}
+              </span>
+              <div className="flex items-center gap-2 mb-3">
+                <span className="inline-block w-3 h-3 rounded-full bg-green-500 animate-pulse"></span>
+                <span className="font-bold text-sm sm:text-base text-[#2D1B11] tracking-wide">
+                  {t.liveStatus} - {t.dayWord} {currentDay.dayNumber} / {days.length}
+                </span>
+              </div>
+              <div className="w-full bg-[#FFF9F0] rounded-full h-3 overflow-hidden border border-[#E8B973]/30">
+                <div 
+                  className="bg-[#F05A0A] h-3 rounded-full transition-all duration-700" 
+                  style={{ width: `${(currentDay.dayNumber / days.length) * 100}%` }}
+                ></div>
+              </div>
+            </div>
+
+            {/* Ganesh Idol Image Container (moved one section above Today's Quick Schedule) */}
+            <div className="lg:col-start-2 lg:row-start-1 lg:row-span-3 flex items-center justify-center">
               <div className="relative w-full h-[380px] sm:h-[480px] lg:h-full min-h-[380px] rounded-3xl overflow-hidden border-2 border-[#E8B973]/60 bg-[#E8B973]/10 shadow-sm flex items-center justify-center">
                 <div 
                   className="absolute inset-0 bg-cover bg-center transition-transform duration-700 hover:scale-103"
@@ -281,6 +248,34 @@ export default function Home() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#2D1B11]/40 via-transparent to-transparent pointer-events-none"></div>
               </div>
+            </div>
+
+            {/* Card 3: Today's Quick Schedule (moved one step down) */}
+            <div className="lg:col-start-1 lg:row-start-3 bg-white rounded-3xl p-6 sm:p-7 border border-[#E8B973]/40 shadow-xs">
+              <span className="text-xs font-bold text-[#F05A0A] uppercase tracking-wider block mb-4 font-sans">
+                {t.todayQuickSchedule}
+              </span>
+              <div className="space-y-3 mb-6">
+                {currentDay.events.slice(0, 4).map((event) => (
+                  <div key={event.id} className="flex items-center gap-3 sm:gap-4 text-sm sm:text-base">
+                    <span className="w-20 sm:w-22 font-bold text-[#F05A0A] shrink-0 font-mono text-xs sm:text-sm">
+                      {event.time}
+                    </span>
+                    <span className="font-medium text-[#2D1B11] flex items-center gap-1.5 truncate">
+                      {event.icon && <span>{event.icon}</span>}
+                      <span>{event.name}</span>
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              <Link
+                href="/days"
+                className="w-full bg-[#F05A0A] hover:bg-[#D04A08] text-white font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 transition-all shadow-xs cursor-pointer active:scale-98 text-sm sm:text-base"
+              >
+                <span>{t.viewScheduleBtn}</span>
+                <ArrowRight size={18} />
+              </Link>
             </div>
 
           </div>
