@@ -23,8 +23,25 @@ export default function MobileNavigation() {
       nimajjanam: '/nimajjanam',
       wallet: '/money',
       money: '/money',
+      about: '/#about',
+      organizers: '/#organizers',
+      location: '/#location',
+      instructions: '/#instructions',
+      contact: '/#contact',
     };
-    if (routes[sectionId]) router.push(routes[sectionId]);
+    if (routes[sectionId]) {
+      if (['about', 'organizers', 'location', 'instructions', 'contact'].includes(sectionId) && typeof window !== 'undefined' && window.location.pathname === '/') {
+        const el = document.getElementById(sectionId);
+        if (el) {
+          const headerOffset = 70;
+          const elementPosition = el.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+          window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+          return;
+        }
+      }
+      router.push(routes[sectionId]);
+    }
   };
 
   const handleShare = async () => {

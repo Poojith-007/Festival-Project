@@ -1,22 +1,75 @@
-const CACHE_NAME = 'festival-shell-v1';
-const APP_SHELL = ['/', '/manifest.json'];
+const CACHE_NAME = 'festival-shell-v2';
+const STATIC_ASSETS = ['/manifest.json', '/favicon.ico'];
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL)));
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(STATIC_ASSETS))
+  );
   self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
-  event.waitUntil(self.clients.claim());
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames
+          .filter((name) => name !== CACHE_NAME)
+          .map((name) => caches.delete(name))
+      );
+    }).then(() => self.clients.claim())
+  );
 });
 
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
-  event.respondWith(
-    caches.match(event.request).then((cached) => cached || fetch(event.request).then((response) => {
-      const copy = response.clone();
-      caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
-      return response;
-    }).catch(() => caches.match('/'))),
-  );
+
+  const url = new URL(event.request.url);
+
+  // 1. Navigation requests (HTML page loads) - Network First
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request).catch(async () => {
+        // Only return cached response if it specifically matches this request URL
+        const cached = await caches.match(event.request);
+        if (cached) return cached;
+        // Fallback to cached root only if navigating to root
+        if (url.pathname === '/') {
+          return (await caches.match('/')) || Response.error();
+        }
+        return Response.error();
+      })
+    );
+    return;
+  }
+
+  // 2. Next.js RSC and API requests - Network Only (do not cache server data payloads)
+  if (
+    event.request.headers.get('RSC') === '1' ||
+    url.searchParams.has('_rsc') ||
+    url.pathname.startsWith('/api/')
+  ) {
+    return;
+  }
+
+  // 3. Static assets (_next/static, images, fonts) - Stale-While-Revalidate / Cache First
+  const isStaticAsset =
+    url.pathname.startsWith('/_next/static/') ||
+    url.pathname.startsWith('/images/') ||
+    url.pathname.match(/\.(png|jpg|jpeg|svg|webp|ico|woff2)$/);
+
+  if (isStaticAsset) {
+    event.respondWith(
+      caches.match(event.request).then((cached) => {
+        const fetchPromise = fetch(event.request).then((response) => {
+          if (response && response.status === 200) {
+            const responseClone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseClone));
+          }
+          return response;
+        }).catch(() => cached);
+
+        return cached || fetchPromise;
+      })
+    );
+  }
 });

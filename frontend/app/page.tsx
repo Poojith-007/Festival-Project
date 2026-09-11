@@ -68,7 +68,7 @@ export default function Home() {
     return true;
   };
 
-  // Scroll to section by ID with header offset
+  // Scroll to section by ID with header offset (without mutating URL history)
   const scrollToSection = (id: string) => {
     const el = document.getElementById(id);
     if (el) {
@@ -79,22 +79,16 @@ export default function Home() {
         top: offsetPosition,
         behavior: 'smooth',
       });
-      history.pushState(null, '', `/#${id}`);
     }
   };
 
-  // Handle hash on initial mount or route changes
+  // Handle hash on initial mount or route changes (only when hash is present)
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const hash = window.location.hash.replace('#', '');
       if (hash) {
         setTimeout(() => {
           scrollToSection(hash);
-        }, 150);
-      } else if (pathname !== '/') {
-        const routeSection = pathname.replace('/', '');
-        setTimeout(() => {
-          scrollToSection(routeSection);
         }, 150);
       }
     }
