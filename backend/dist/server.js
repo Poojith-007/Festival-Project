@@ -46,6 +46,9 @@ app.get('/api/finance', async (_req, res) => {
     res.json({ success: true, data: snapshot.exists ? snapshot.data() : { donations: 20000, expenses: 10000 } });
 });
 app.use('/api/admin', requireAdmin);
+app.get('/api/admin/session', (req, res) => {
+    res.json({ success: true, data: req.user });
+});
 app.put('/api/admin/festival', async (req, res) => {
     if (!db) {
         res.status(503).json({ success: false, error: { code: 'FIREBASE_NOT_CONFIGURED', message: 'Firebase Admin is not configured.' } });

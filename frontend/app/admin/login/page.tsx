@@ -19,8 +19,8 @@ export default function AdminLoginPage() {
     try {
       await signIn(email, password);
       router.replace('/admin');
-    } catch {
-      setError('Sign-in failed. Check the email and password, then try again.');
+    } catch (signInError) {
+      setError(signInError instanceof Error ? signInError.message : 'Sign-in failed. Check the email and password, then try again.');
     } finally {
       setSubmitting(false);
     }

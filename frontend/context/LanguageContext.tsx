@@ -39,11 +39,11 @@ export const translations = {
     journeyTitle: 'The 7-Day Journey (List View)',
     journeySubtitle: 'Explore the daily schedule, sacred rituals, and divine darshan.',
     todayStage: 'TODAY: Pranapratishta',
-    todayLabel: 'Day 1 (Today)',
+    todayLabel: 'Day 1 (14 September 2026)',
     upcomingStage: 'Days 2–6',
     upcomingNote: 'Upcoming events. Normal opacity.',
     mahaNimajjanamStage: 'MAHA NIMAJJANAM',
-    finalDayLabel: 'Day 7',
+    finalDayLabel: 'Day 7 (20 September 2026)',
 
     // Specific Day Details
     dayDetailsHeading: 'Specific Day Details',
@@ -194,11 +194,11 @@ export const translations = {
     journeyTitle: '7 రోజుల ఉత్సవ ప్రస్థానం (జాబితా)',
     journeySubtitle: 'రోజువారీ పూజా విశేషాలు, దివ్య హారతులు మరియు దర్శనం వివరాలు.',
     todayStage: 'నేడు: ప్రాణప్రతిష్ఠ',
-    todayLabel: '1వ రోజు (నేడు)',
+    todayLabel: '1వ రోజు (14 సెప్టెంబర్ 2026)',
     upcomingStage: '2–6 రోజులు',
     upcomingNote: 'రాబోవు రోజువారీ పూజా కార్యక్రమాలు.',
     mahaNimajjanamStage: 'మహా నిమజ్జనం',
-    finalDayLabel: '7వ రోజు',
+    finalDayLabel: '7వ రోజు (20 సెప్టెంబర్ 2026)',
 
     // Specific Day Details
     dayDetailsHeading: 'రోజువారీ పూర్తి వివరాలు',

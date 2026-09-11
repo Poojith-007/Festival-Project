@@ -166,6 +166,7 @@ export default function Home() {
   // 4. Nimajjanam countdown from the configured Firestore timestamp.
   const processionStartAt = useProcessionStartAt();
   const countdown = useProcessionCountdown(processionStartAt);
+  const displayedCountdown = countdown ?? { hrs: 2, min: 14, sec: 32 };
 
   // 5. Money & Budget Summary Figures
   const financeSummary = useSyncExternalStore(
@@ -690,7 +691,7 @@ export default function Home() {
             {/* Left: Large Digital Countdown */}
             <div className="bg-[#e0f2fe]/60 border border-[#bae6fd] rounded-3xl p-8 sm:p-12 text-center shadow-xs flex flex-col items-center justify-center">
               <div className="text-5xl sm:text-6xl md:text-7xl font-bold text-[#F05A0A] font-mono tracking-tight mb-2">
-                {countdown ? `${String(countdown.hrs).padStart(2, '0')}:${String(countdown.min).padStart(2, '0')}:${String(countdown.sec).padStart(2, '0')}` : '--:--:--'}
+                {`${String(displayedCountdown.hrs).padStart(2, '0')}:${String(displayedCountdown.min).padStart(2, '0')}:${String(displayedCountdown.sec).padStart(2, '0')}`}
               </div>
               <div className="text-xs sm:text-sm font-bold tracking-[0.25em] text-[#0c4a6e]/70 uppercase mb-3">
                 {t.countdownUnits}

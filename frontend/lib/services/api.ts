@@ -36,6 +36,10 @@ export function fetchLiveAnnouncements() {
   return request<Array<Record<string, unknown>>>('/api/announcements');
 }
 
+export function verifyAdminSession(user: User) {
+  return request<{ uid: string; email?: string }>('/api/admin/session', {}, user);
+}
+
 export function createLiveEvent(payload: Record<string, unknown>, user: User) {
   return request('/api/admin/events', { method: 'POST', body: JSON.stringify(payload) }, user);
 }
