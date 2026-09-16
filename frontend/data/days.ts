@@ -7,7 +7,7 @@ export const festivalDays: FestivalDay[] = [
     date: '14 Sep 2026',
     title: 'Installation & Pranapratishta',
     shortDescription: 'The grand welcoming and consecration of Lord Ganesha.',
-    status: 'current',
+    status: 'upcoming',
     mainEvent: 'Pranapratishta',
     image: '/images/festival/ganesh-idol.jpg',
     events: [
@@ -36,7 +36,7 @@ export const festivalDays: FestivalDay[] = [
     date: '16 Sep 2026',
     title: 'Bhajans & Kirtans',
     shortDescription: 'Devotional songs and bhajans by the community.',
-    status: 'upcoming',
+    status: 'current',
     mainEvent: 'Community Bhajans',
     events: [
       { id: 'e5', time: '06:30 PM', name: 'Maha Aarti', icon: '🕉️' },

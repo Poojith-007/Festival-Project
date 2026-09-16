@@ -94,9 +94,9 @@ export default function Home() {
     }
   }, [pathname]);
 
-  // 1. Day Selection State (defaults to Day 1 as requested)
-  const currentDay = days.find((day) => day.status === 'current') ?? days[0];
-  const [selectedDayId, setSelectedDayId] = useState<string>(currentDay?.id || 'day-1');
+  // 1. Day Selection State (defaults to Day 3 as current day)
+  const currentDay = days.find((day) => day.status === 'current') ?? days[2] ?? days[0];
+  const [selectedDayId, setSelectedDayId] = useState<string>(currentDay?.id || 'day-3');
   const selectedDay = days.find((day) => day.id === selectedDayId) ?? currentDay ?? days[0];
 
   // 2. Working Push Notification Subscription State

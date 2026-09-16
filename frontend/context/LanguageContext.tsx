@@ -337,7 +337,7 @@ export const translatedDaysData: Record<Language, TranslatedDay[]> = {
       date: '14 Sep 2026',
       title: 'Installation & Pranapratishta',
       shortDescription: 'The grand welcoming and sacred consecration of Lord Ganesha.',
-      status: 'current',
+      status: 'upcoming',
       announcement: 'Welcome to Day 1! Murthi Sthapana and Pranapratishta will begin at 9:00 AM.',
       events: [
         { id: 'e1', time: '06:00 AM', name: 'Suprabhatam & Mangala Vadyam', icon: '🌅' },
@@ -367,7 +367,7 @@ export const translatedDaysData: Record<Language, TranslatedDay[]> = {
       date: '16 Sep 2026',
       title: 'Devotional Bhajans & Kirtans',
       shortDescription: 'Devotional songs and musical renditions by the village community.',
-      status: 'upcoming',
+      status: 'current',
       announcement: 'Special musical bhajans by local devotees starting at 7:30 PM.',
       events: [
         { id: 'e9', time: '07:00 AM', name: 'Morning Puja', icon: '🪔' },
@@ -446,7 +446,7 @@ export const translatedDaysData: Record<Language, TranslatedDay[]> = {
       date: '14 సెప్టెం 2026',
       title: 'మూర్తి స్థాపన & ప్రాణప్రతిష్ఠ',
       shortDescription: 'గణనాథుడికి ఘన స్వాగతం మరియు పవిత్ర ప్రాణప్రతిష్ఠ పూజ.',
-      status: 'current',
+      status: 'upcoming',
       announcement: '1వ రోజుకు స్వాగతం! ఉదయం 9:00 గంటలకు గణపతి మూర్తి స్థాపన మరియు ప్రాణప్రతిష్ఠ పూజ ప్రారంభమవుతుంది.',
       events: [
         { id: 'e1', time: '06:00 AM', name: 'సుప్రభాతం & మంగళవాయిద్యాలు', icon: '🌅' },
@@ -476,7 +476,7 @@ export const translatedDaysData: Record<Language, TranslatedDay[]> = {
       date: '16 సెప్టెం 2026',
       title: 'భక్తి భజనలు & సంకీర్తనలు',
       shortDescription: 'గ్రామ ప్రజల మరియు మహిళల ఆధ్వర్యంలో భక్తి సంకీర్తనలు.',
-      status: 'upcoming',
+      status: 'current',
       announcement: 'సాయంత్రం 7:30 గంటలకు గ్రామస్థుల ప్రత్యేక భక్తి భజన కార్యక్రమం ప్రారంభమవుతుంది.',
       events: [
         { id: 'e9', time: '07:00 AM', name: 'ఉదయపు గణపతి పూజ', icon: '🪔' },
