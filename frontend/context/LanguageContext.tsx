@@ -38,7 +38,7 @@ export const translations = {
     // 7-Day Journey
     journeyTitle: 'The 7-Day Journey (List View)',
     journeySubtitle: 'Explore the daily schedule, sacred rituals, and divine darshan.',
-    todayStage: 'TODAY: Pranapratishta',
+    todayStage: 'Pranapratishta',
     todayLabel: 'Day 1 (14 September 2026)',
     upcomingStage: 'Days 2–6',
     upcomingNote: 'Upcoming events. Normal opacity.',
@@ -193,7 +193,7 @@ export const translations = {
     // 7-Day Journey
     journeyTitle: '7 రోజుల ఉత్సవ ప్రస్థానం (జాబితా)',
     journeySubtitle: 'రోజువారీ పూజా విశేషాలు, దివ్య హారతులు మరియు దర్శనం వివరాలు.',
-    todayStage: 'నేడు: ప్రాణప్రతిష్ఠ',
+    todayStage: 'ప్రాణప్రతిష్ఠ',
     todayLabel: '1వ రోజు (14 సెప్టెంబర్ 2026)',
     upcomingStage: '2–6 రోజులు',
     upcomingNote: 'రాబోవు రోజువారీ పూజా కార్యక్రమాలు.',
@@ -367,7 +367,7 @@ export const translatedDaysData: Record<Language, TranslatedDay[]> = {
       date: '16 Sep 2026',
       title: 'Devotional Bhajans & Kirtans',
       shortDescription: 'Devotional songs and musical renditions by the village community.',
-      status: 'current',
+      status: 'upcoming',
       announcement: 'Special musical bhajans by local devotees starting at 7:30 PM.',
       events: [
         { id: 'e9', time: '07:00 AM', name: 'Morning Puja', icon: '🪔' },
@@ -382,7 +382,7 @@ export const translatedDaysData: Record<Language, TranslatedDay[]> = {
       date: '17 Sep 2026',
       title: 'Sri Mahaganapathi Special Puja',
       shortDescription: 'Sacred abhishekam, deeparadhana, and cultural events.',
-      status: 'upcoming',
+      status: 'current',
       announcement: 'Today special Anna Danam seva will be served to all devotees.',
       events: [
         { id: 'e13', time: '06:00 AM', name: 'Suprabhatam', icon: '🌅' },
@@ -476,7 +476,7 @@ export const translatedDaysData: Record<Language, TranslatedDay[]> = {
       date: '16 సెప్టెం 2026',
       title: 'భక్తి భజనలు & సంకీర్తనలు',
       shortDescription: 'గ్రామ ప్రజల మరియు మహిళల ఆధ్వర్యంలో భక్తి సంకీర్తనలు.',
-      status: 'current',
+      status: 'upcoming',
       announcement: 'సాయంత్రం 7:30 గంటలకు గ్రామస్థుల ప్రత్యేక భక్తి భజన కార్యక్రమం ప్రారంభమవుతుంది.',
       events: [
         { id: 'e9', time: '07:00 AM', name: 'ఉదయపు గణపతి పూజ', icon: '🪔' },
@@ -491,7 +491,7 @@ export const translatedDaysData: Record<Language, TranslatedDay[]> = {
       date: '17 సెప్టెం 2026',
       title: 'శ్రీ మహాగణపతి విశేష పూజ',
       shortDescription: 'పంచామృతాభిషేకాలు, మంగళ హారతులు మరియు సాంస్కృతిక వేడుకలు.',
-      status: 'upcoming',
+      status: 'current',
       announcement: 'నేడు భక్తులందరికీ ప్రత్యేక మహా అన్నదాన సేవ నిర్వహించబడుతుంది.',
       events: [
         { id: 'e13', time: '06:00 AM', name: 'సుప్రభాత సేవ', icon: '🌅' },

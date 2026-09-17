@@ -36,7 +36,7 @@ export const festivalDays: FestivalDay[] = [
     date: '16 Sep 2026',
     title: 'Bhajans & Kirtans',
     shortDescription: 'Devotional songs and bhajans by the community.',
-    status: 'current',
+    status: 'upcoming',
     mainEvent: 'Community Bhajans',
     events: [
       { id: 'e5', time: '06:30 PM', name: 'Maha Aarti', icon: '🕉️' },
@@ -49,7 +49,7 @@ export const festivalDays: FestivalDay[] = [
     date: '17 Sep 2026',
     title: 'Sri Ganapathi Puja',
     shortDescription: 'Special aarti and cultural programs.',
-    status: 'upcoming',
+    status: 'current',
     mainEvent: 'Cultural Night',
     events: [
       { id: 'e7', time: '06:00 AM', name: 'Suprabhatam', icon: '🌅' },
