@@ -382,7 +382,7 @@ export const translatedDaysData: Record<Language, TranslatedDay[]> = {
       date: '17 Sep 2026',
       title: 'Sri Mahaganapathi Special Puja',
       shortDescription: 'Sacred abhishekam, deeparadhana, and cultural events.',
-      status: 'current',
+      status: 'upcoming',
       announcement: 'Today special Anna Danam seva will be served to all devotees.',
       events: [
         { id: 'e13', time: '06:00 AM', name: 'Suprabhatam', icon: '🌅' },
@@ -399,7 +399,7 @@ export const translatedDaysData: Record<Language, TranslatedDay[]> = {
       date: '18 Sep 2026',
       title: 'Lakshmi Ganapathi Homam',
       shortDescription: 'Sacred homam for village peace, prosperity, and auspiciousness.',
-      status: 'upcoming',
+      status: 'current',
       announcement: 'Devotees are invited to participate in the sacred Purnahuti at 11:30 AM.',
       events: [
         { id: 'e19', time: '08:00 AM', name: 'Sri Lakshmi Ganapathi Homam', icon: '🔥' },
@@ -427,12 +427,13 @@ export const translatedDaysData: Record<Language, TranslatedDay[]> = {
       id: 'day-7',
       dayNumber: 7,
       date: '20 Sep 2026',
-      title: 'Maha Nimajjanam & Shobha Yatra',
-      shortDescription: 'The grand farewell procession and holy immersion ceremony.',
+      title: 'Maha Nimajjanam & Annadanam',
+      shortDescription: 'The grand farewell procession, holy immersion ceremony, and Maha Annadanam.',
       status: 'upcoming',
-      announcement: 'Procession starts at 2:00 PM from Ramalayam Temple Mandapam to Immersion Ghat.',
+      announcement: 'Maha Annadanam starts at 12:00 PM. Procession starts at 2:00 PM from Ramalayam Temple Mandapam to Immersion Ghat.',
       events: [
         { id: 'e27', time: '08:00 AM', name: 'Farewell Maha Puja & Yagnyam', icon: '🪔' },
+        { id: 'e31', time: '12:00 PM', name: 'Maha Annadanam', icon: '🍛' },
         { id: 'e28', time: '01:00 PM', name: 'Murthi Utsavam on Chariot', icon: '🛞' },
         { id: 'e29', time: '02:00 PM', name: 'Grand Procession Commences', icon: '🥁' },
         { id: 'e30', time: '06:30 PM', name: 'Sacred Water Immersion (Ghat)', icon: '🌊' }
@@ -491,7 +492,7 @@ export const translatedDaysData: Record<Language, TranslatedDay[]> = {
       date: '17 సెప్టెం 2026',
       title: 'శ్రీ మహాగణపతి విశేష పూజ',
       shortDescription: 'పంచామృతాభిషేకాలు, మంగళ హారతులు మరియు సాంస్కృతిక వేడుకలు.',
-      status: 'current',
+      status: 'upcoming',
       announcement: 'నేడు భక్తులందరికీ ప్రత్యేక మహా అన్నదాన సేవ నిర్వహించబడుతుంది.',
       events: [
         { id: 'e13', time: '06:00 AM', name: 'సుప్రభాత సేవ', icon: '🌅' },
@@ -508,7 +509,7 @@ export const translatedDaysData: Record<Language, TranslatedDay[]> = {
       date: '18 సెప్టెం 2026',
       title: 'లక్ష్మీ గణపతి హోమం',
       shortDescription: 'గ్రామ సుభిక్షం మరియు శాంతి కొరకు పవిత్ర హోమ పూజ.',
-      status: 'upcoming',
+      status: 'current',
       announcement: 'ఉదయం 11:30 గంటలకు జరిగే పూర్ణాహుతి కార్యక్రమంలో భక్తులు పాల్గొనవచ్చు.',
       events: [
         { id: 'e19', time: '08:00 AM', name: 'శ్రీ లక్ష్మీ గణపతి హోమం ప్రారంభం', icon: '🔥' },
@@ -536,12 +537,13 @@ export const translatedDaysData: Record<Language, TranslatedDay[]> = {
       id: 'day-7',
       dayNumber: 7,
       date: '20 సెప్టెం 2026',
-      title: 'మహా నిమజ్జనం & శోభాయాత్ర',
-      shortDescription: 'గ్రామ పురవీధుల్లో భవ్య శోభాయాత్ర మరియు పవిత్ర జల నిమజ్జనం.',
+      title: 'మహా నిమజ్జనం & అన్నదానం',
+      shortDescription: 'భవ్య శోభాయాత్ర, పవిత్ర జల నిమజ్జనం మరియు మహా అన్నదానం.',
       status: 'upcoming',
-      announcement: 'మధ్యాహ్నం 2:00 గంటలకు రామాలయం మండపం నుండి నిమజ్జన శోభాయాత్ర ప్రారంభమవుతుంది.',
+      announcement: 'మధ్యాహ్నం 12:00 గంటలకు మహా అన్నదానం, మధ్యాహ్నం 2:00 గంటలకు రామాలయం మండపం నుండి నిమజ్జన శోభాయాత్ర ప్రారంభమవుతుంది.',
       events: [
         { id: 'e27', time: '08:00 AM', name: 'వీడ్కోలు మహా పూజ & యజ్ఞం', icon: '🪔' },
+        { id: 'e31', time: '12:00 PM', name: 'మహా అన్నదాన ప్రసాదం', icon: '🍛' },
         { id: 'e28', time: '01:00 PM', name: 'రథంపై గణపతి మూర్తి అధిరోహణ', icon: '🛞' },
         { id: 'e29', time: '02:00 PM', name: 'పురవీధుల్లో శోభాయాత్ర ప్రారంభం', icon: '🥁' },
         { id: 'e30', time: '06:30 PM', name: 'మచిలీపట్నం ఘాట్ వద్ద పవిత్ర నిమజ్జనం', icon: '🌊' }

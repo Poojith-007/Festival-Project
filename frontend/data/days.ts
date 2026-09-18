@@ -49,7 +49,7 @@ export const festivalDays: FestivalDay[] = [
     date: '17 Sep 2026',
     title: 'Sri Ganapathi Puja',
     shortDescription: 'Special aarti and cultural programs.',
-    status: 'current',
+    status: 'upcoming',
     mainEvent: 'Cultural Night',
     events: [
       { id: 'e7', time: '06:00 AM', name: 'Suprabhatam', icon: '🌅' },
@@ -64,12 +64,15 @@ export const festivalDays: FestivalDay[] = [
     id: 'day-5',
     dayNumber: 5,
     date: '18 Sep 2026',
-    title: 'Maha Annadanam',
-    shortDescription: 'Grand feast and prasadam for all devotees.',
-    status: 'upcoming',
-    mainEvent: 'Maha Annadanam',
+    title: 'Lakshmi Ganapathi Homam',
+    shortDescription: 'Sacred homam for village peace, prosperity, and auspiciousness.',
+    status: 'current',
+    mainEvent: 'Lakshmi Ganapathi Homam',
     events: [
-      { id: 'e12', time: '12:00 PM', name: 'Maha Annadanam Starts', icon: '🍛' }
+      { id: 'e19', time: '08:00 AM', name: 'Sri Lakshmi Ganapathi Homam', icon: '🔥' },
+      { id: 'e20', time: '11:30 AM', name: 'Maha Purnahuti & Ashirvachanam', icon: '🪔' },
+      { id: 'e21', time: '07:00 PM', name: 'Grand Evening Aarti', icon: '🕉️' },
+      { id: 'e22', time: '08:30 PM', name: 'Prasadam Distribution', icon: '🍛' }
     ]
   },
   {
@@ -88,15 +91,16 @@ export const festivalDays: FestivalDay[] = [
     id: 'day-7',
     dayNumber: 7,
     date: '20 Sep 2026',
-    title: 'Maha Nimajjanam',
-    shortDescription: 'The grand final-day immersion and procession.',
+    title: 'Maha Nimajjanam & Annadanam',
+    shortDescription: 'The grand final-day immersion, procession, and Maha Annadanam.',
     status: 'upcoming',
-    mainEvent: 'Procession & Immersion',
+    mainEvent: 'Maha Annadanam & Immersion',
     image: '/images/festival/nimajjanam_background_1788872905368.jpg',
     events: [
       { id: 'e14', time: '08:00 AM', name: 'Final Puja', icon: '🪔' },
-      { id: 'e15', time: '10:00 AM', name: 'Procession Starts', icon: '🚶' },
-      { id: 'e16', time: '04:00 PM', name: 'Nimajjanam', icon: '🌊' }
+      { id: 'e12', time: '12:00 PM', name: 'Maha Annadanam Starts', icon: '🍛' },
+      { id: 'e15', time: '02:00 PM', name: 'Procession Starts', icon: '🚶' },
+      { id: 'e16', time: '06:30 PM', name: 'Nimajjanam', icon: '🌊' }
     ]
   }
 ];
